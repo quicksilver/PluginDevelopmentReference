@@ -527,7 +527,7 @@ Here are all the types Quicksilver declares in `QSTypes.h`. I don't know what mi
 
 This is optional, but if you want the text that appears most prominently in the user interface to be something other than the name, you can set this using `setLabel:@"some string"`.
 
-This is also the string that Quicksilver matches against when a user is typing, so keep that in mind. You can make things easier (or harder) for users to find in the catalog by messing with the label.
+This is also the string that Quicksilver matches against when a user is typing, so keep that in mind. You can make things easier for users to find in the catalog by messing with the label. (The name will still be searchable as well, and will appear instead when matched.)
 
 Setting the label will not change the appearance of the search result list, only the main QS panes. In the result list, the label wont be displayed. Instead, the name will still be the most prominent thing displayed.
 
