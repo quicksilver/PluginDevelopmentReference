@@ -13,18 +13,14 @@ I'll assume you're working on a plug-in called "Blah" when giving examples.
 
 ## Getting Started ##
 
-I used the template provided in Ankur Kothari's tutorial (see Links) and it worked fine. There are just two things I would change after setting up a new project based on his template.
+I used the template provided in Ankur Kothari's tutorial (see Links) and it worked fine. There are a few things I would change after setting up a new project based on his template.
 
-  1. Change the SDK to be 10.5 or higher. (If you don't even have the 10.4 SDK installed, like me, you'll see an error that will make this obvious.)
-  2. The `BlahAction.h` imports itself. I'm not an expert, but this seems like a mistake and removing the line hasn't made a difference in plug-ins I've worked on.
-
-To compile most plug-ins, you'll need a "developer build" of Quicksilver. This is hard to come by these days, but it's just the normal application with some header files included. You can turn your copy of Quicksilver into a developer version by downloading [the headers](http://qsapp.com/dev/Frameworks.zip) and putting them in `/Applications/Quicksilver.app/Contents/Frameworks/`.
-
-Once you have them in place, you need to tell Xcode about them. Go to the "Source Trees" section in Xcode's preferences and add this:
-
-    Setting Name: QSFrameworks  
-    Display Name: Quicksilver Frameworks  
-    Path:         /Applications/Quicksilver.app/Contents/Frameworks/
+  1. The `BlahAction.h` imports itself. Remove that line.
+  2. Change the SDK to be "Latest Mac OS X". (If you don't even have the 10.4 SDK installed, like me, you'll see an error that will make this obvious.)
+  3. Change Architectures to "Standard (32/64-bit Intel)"
+  4. Change Valid Architectures to "i386 x86_64"
+  5. Set Build Products Path to `$(QS_BUILD_ROOT)/build`
+  6. Create a new user-defined setting called `QS_BUILD_ROOT` and set it to `/tmp/QS`
 
 Etienne Samson offers this alternate technique:
 
@@ -42,6 +38,8 @@ Etienne Samson offers this alternate technique:
 I'm sure this is good advice, but I don't know enough about Xcode to follow most of those steps, so I didn't. You probably should if you can.
 
 Many of the items in the template's `Info.plist` are named "SomethingTemplate". This prevents Quicksilver from having to process unused features. If you need to use settings in any of these sections, just rename them, removing "Template" from the end.
+
+To compile most plug-ins, you'll need to build Quicksilver itself from source. (It'll put the stuff you need in `/tmp/QS`.) To build your plug-in with the Debug configuration, you'll need to first build Quicksilver with its Debug configuration. Same for the Release configuration.
 
 ## Documentation ##
 
@@ -236,7 +234,7 @@ If you need to get the full details of the `QSObject`s passed in, you can do som
         NSString *somethingWeNeed = [individual objectForMeta:@"key"];
     }
 
-Unlike the first example, this will *only* work if multiple items were passed in by the user, so you need to write code to detect multiple objects and code to handle the single object case. The best way to tell if you're dealing with single vs. multiple objects is to look at the count:
+`splitObjects` is safe to use on single `QSObject`s, so it will work for any case, but sometimes you need to know which you have. The best way to tell if you're dealing with single vs. multiple objects is to look at the count:
 
     if ([dObject count] == 1)
     {
@@ -304,8 +302,127 @@ I'm not sure what happens if you send multiple objects (via the comma trick) to 
 
 *Applications Actions* are actions that only appear in the list of actions when a specific application if selected in the first pane of Quicksilver. Examples of this are the actions "Next Song", "Play - Pause", "Previous Song" that are provided by the iTunes plugin and only appear if iTunes is selected in the first pane. Or the "Get New Mail" and "Open New Mail" actions for Mail.app.
 
-These actions are defined in the `Info.plist` of the plugin, in `QSRegistration` -> `QSApplicationActions` -> bundle identifier -> action identifier. The same pattern can be used as in the normal actions (inside `QSActions`) **OR** a `QSCommand`. A QSCommand is basically an AppleScript that is run without calling any functions in it or passing any arguments. For an example how `QSApplicationActions` and `QSCommands` are defined, see [the Info.plist of the Apple Mail Plugin](https://github.com/quicksilver/Plugins/blob/master/com.apple.Mail/Info.plist).
-<!-- TODO check if QSCommands can also be used as normal actions -->
+These actions are defined in the `Info.plist` of the plugin, in `QSRegistration` → `QSApplicationActions` → bundle identifier → action identifier. The same pattern can be used as in the normal actions (inside `QSActions`) **OR** a `QSCommand`. For an example of how `QSApplicationActions` are defined, see [the Info.plist of the Apple Mail Plugin](https://github.com/quicksilver/com.apple.Mail-qsplugin/blob/master/Info.plist).
+
+## Commands ##
+
+A `QSCommand` is something that contains a direct object, an action, and an indirect object. In other words, it encapsulates something you would normally put together in Quicksilver's interface.
+
+Commands can be created by users (using the ⌃↩ "encapsulate" keystroke), by code (using methods from the `QSCommand` class), and in a plug-ins `Info.plist` (Under `QSRegistration` → `QSCommands`). Triggers typically (always?) refer to commands for obvious reasons.
+
+One thing to note is that commands don't require either a direct or indirect object. For example, the iTunes plug-in comes with a number of predefined triggers like "Play", "Increase Volume", "Increase Rating", etc. These always do the same thing. There's no need to specify an object for them to act on. As a result, the commands these triggers refer to contain only an action.
+
+When defining commands in the property list, the contents will vary greatly depending on the `actionID`. The `actionID` can refer to any action, but there are only a few that make sense. Below are examples of three common types.
+
+For commands that call an Objective-C method somewhere, use "QSObjCSendMessageAction":
+
+    <key>QSiTunesMute</key>
+    <dict>
+      <key>command</key>
+      <dict>
+        <key>actionID</key>
+        <string>QSObjCSendMessageAction</string>
+        <key>directArchive</key>
+        <dict>
+          <key>data</key>
+          <dict>
+            <key>qs.action</key>
+            <dict>
+              <key>actionClass</key>
+              <string>QSiTunesControlProvider</string>
+              <key>actionSelector</key>
+              <string>volumeMute</string>
+              <key>icon</key>
+              <string>iTunesIcon</string>
+              <key>name</key>
+              <string>Mute</string>
+            </dict>
+          </dict>
+        </dict>
+        <key>directID</key>
+        <string>QSiTunesVolumeMute</string>
+      </dict>
+    </dict>
+
+**Be sure the key and `directID` are not the same.**
+
+For commands that should invoke Quicksilver, and allow searching a specific subset of objects, use "QSObjectSearchChildrenAction":
+
+    <key>QSiTunesSearchArtists</key>
+    <dict>
+      <key>command</key>
+      <dict>
+        <key>actionID</key>
+        <string>QSObjectSearchChildrenAction</string>
+        <key>directArchive</key>
+        <dict>
+          <key>data</key>
+          <dict>
+            <key>com.apple.itunes.qsbrowsercriteria</key>
+            <dict>
+              <key>Result</key>
+              <string>Artist</string>
+              <key>Type</key>
+              <string>Artist</string>
+            </dict>
+          </dict>
+        </dict>
+      </dict>
+      <key>name</key>
+      <string>Search Artists</string>
+    </dict>
+
+For commands that are handled by an AppleScript file somewhere, use "AppleScriptRunAction":
+
+    <key>QSiTunesMute</key>
+    <dict>
+      <key>command</key>
+      <dict>
+        <key>actionID</key>
+        <string>AppleScriptRunAction</string>
+        <key>directResource</key>
+        <dict>
+          <key>bundle</key>
+          <string>com.blacktree.Quicksilver.QSiTunesPlugIn</string>
+          <key>path</key>
+          <string>Contents/Resources/Scripts/Mute.scpt</string>
+        </dict>
+      </dict>
+    </dict>
+
+## Trigger Presets ##
+
+Your plug-in can provide pre-defined triggers. These go under `QSTriggerAdditions` and look something like this:
+
+    <key>ID</key>
+    <string>QSiTunesNextSongTrigger</string>
+    <key>command</key>
+    <string>QSiTunesNextSongCommand</string>
+    <key>defaults</key>
+    <dict>
+      <key>characters</key>
+      <string></string>
+      <key>keyCode</key>
+      <integer>124</integer>
+      <key>modifiers</key>
+      <integer>9961768</integer>
+      <key>type</key>
+      <string>QSHotKeyTrigger</string>
+    </dict>
+    <key>name</key>
+    <string>Next Song</string>
+    <key>set</key>
+    <string>iTunes</string>
+
+Only the type is required under `defaults` if you don't want to specify a shortcut. The `set` refers to the name of a group in the Trigger preferences. To create a new group for your plug-in's triggers, add something like this under `QSRegistration` → `QSTriggerSets`:
+
+    <key>QSBlah</key>
+    <dict>
+      <key>icon</key>
+      <string>GenericDocument</string>
+      <key>name</key>
+      <string>Blah</string>
+    </dict>
 
 ## Adding to the Catalog ##
 
@@ -385,6 +502,8 @@ Quicksilver calls this in real-time as objects need to be displayed, which is wh
 
 This method does not seem to be called for `QSObject`s created using `objectWithString:`. That method makes a call to `loadIcon:` internally, which must tell Quicksilver that it already has an icon and doesn't need to go look for one.
 
+<!-- TODO document how to add a bundle's icon in the plist -->
+
 #### loadChildrenForObject
 
 Example: `- (BOOL)loadChildrenForObject:(QSObject *)object`
@@ -402,9 +521,9 @@ These can be newly created objects or objects that are already in the catalog. I
 
 Example: `- (BOOL)objectHasChildren:(QSObject *)object`
 
-This method is used to indicate to the user that an object is browsable (can be right arrowed into). If it returns `YES`, a little arrow is displayed on the very right of the object. 
+This method is used to indicate to the user that an object is browsable (can be right arrowed into). If it returns `YES`, a little arrow is displayed on the very right of the object.
 
-If you used `loadChildrenForObject:` so the user can right arrow into an object, you should indicate that to the user by having this method return 'YES'.
+If you used `loadChildrenForObject:` so the user can right arrow into an object, you should indicate that to the user by having this method return `YES`.
 
 **NOTE**: Not returning `YES` will hide the little arrow indicator, but the user will still be able to arrow into the object, if you provided children for the object by using `loadChildrenForObject:`.
 
@@ -547,9 +666,26 @@ You can set an icon for a `QSObject` using the `setIcon:` method. I'm not even s
 
 I don't recommend using the `setIcon:` method when adding things to the catalog. (See the note on `setQuickIconForObject:` for an explanation.) However, using this method directly from one of your actions does work if you want to set the icon temporarily for something you're sending back to the Quicksilver UI. (That too will go away, but this is only an issue if the user leaves the object you return up in the first pane.)
 
-FYI, if you want to use one of the standard system icons for something, many can be found in `/System/Library/CoreServices/CoreTypes.bundle/Contents/Resources`. You can refer to them using only the file's name (no path and no ".icns" extension). To use the icon for an application, use its bundle identifier, like `com.apple.Mail`. Finally, you can also provide the full path to an image file.
+FYI, if you want to use one of the standard system icons for something, many can be found in `/System/Library/CoreServices/CoreTypes.bundle/Contents/Resources`. You can refer to them using only the file's name (no path and no ".icns" extension). To use the icon for an application, use its bundle identifier, like `com.apple.Mail`. Finally, you can also provide the full path to an image file. Here are some examples:
 
-If you want to use the icon for a particular file type, here's one method using the extension.
+    [QSResourceManager imageNamed:@"com.apple.Mail"]
+    [QSResourceManager imageNamed:@"/Users/me/Pictures/Some.icns"]
+
+You can also use `QSResourceManager` to get specific icons from inside a bundle's Resources folder, but that requires a bit of extra work. For example, to use the bookmark menu icon in Safari's bundle, you need to define a section in the property list called `QSResourceAdditions`, then define different icons under it, such as:
+
+    <key>SafariBookmarkMenuIcon</key>
+    <dict>
+      <key>bundle</key>
+      <string>com.apple.Safari</string>
+      <key>resource</key>
+      <string>tiny_menu.tiff</string>
+    </dict>
+
+That will allow you to refer to the icon in your code with something like
+
+    [QSResourceManager imageNamed:@"SafariBookmarkMenuIcon"]
+
+Finally, if you want to use the icon for a particular file type, here's one method using the extension.
 
     [myObject setIcon:[[NSWorkspace sharedWorkspace] iconForFileType:@"pdf"]];
 
