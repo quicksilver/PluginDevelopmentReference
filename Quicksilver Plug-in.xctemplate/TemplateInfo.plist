@@ -45,7 +45,7 @@
 			<key>Frameworks</key>
 			<array>
 				<string>Cocoa</string>
-				<string>ScriptingBridge</string>
+				<!-- <string>ScriptingBridge</string> -->
 			</array>
 <!--
 			<key>OtherFrameworks</key>
