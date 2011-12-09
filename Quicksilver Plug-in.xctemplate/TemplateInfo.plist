@@ -196,6 +196,8 @@
 &lt;/dict&gt;
 &lt;key&gt;QSActions&lt;/key&gt;
 &lt;dict&gt;
+&lt;key&gt;___PACKAGENAMEASIDENTIFIER___ExampleAction&lt;/key&gt;
+&lt;dict&gt;
 &lt;key&gt;actionClass&lt;/key&gt;
 &lt;string&gt;___PACKAGENAMEASIDENTIFIER___ActionProvider&lt;/string&gt;
 &lt;key&gt;actionSelector&lt;/key&gt;
@@ -206,6 +208,7 @@
 &lt;/array&gt;
 &lt;key&gt;icon&lt;/key&gt;
 &lt;string&gt;ToolbarAdvanced&lt;/string&gt;
+&lt;/dict&gt;
 &lt;/dict&gt;
 &lt;key&gt;QSRegistration&lt;/key&gt;
 &lt;dict&gt;
