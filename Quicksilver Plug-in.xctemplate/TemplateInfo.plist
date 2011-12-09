@@ -147,6 +147,8 @@
 						<dict>
 							<key>Path</key>
 							<string>bltrversion</string>
+							<key>TargetIndices</key>
+							<array/>
 						</dict>
 					</dict>
 				</dict>
