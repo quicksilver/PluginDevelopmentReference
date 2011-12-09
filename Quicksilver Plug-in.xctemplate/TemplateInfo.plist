@@ -21,7 +21,7 @@
 	<array>
 		<dict>
 			<key>ProductType</key>
-			<string>com.apple.generic-bundle</string>
+			<string>com.apple.product-type.bundle</string>
 			<key>SharedSettings</key>
 			<dict>
 				<key>WRAPPER_EXTENSION</key>
