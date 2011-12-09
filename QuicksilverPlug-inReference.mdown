@@ -11,6 +11,10 @@ I wanted to write a plug-in. I found a bit of documentation on adding Actions, b
 
 I'll assume you're working on a plug-in called "Blah" when giving examples.
 
+<!-- 
+TODO document adding Scripting Bridge support to the project
+-->
+
 ## Getting Started ##
 
 I used the template provided in Ankur Kothari's tutorial (see Links) and it worked fine. There are a few things I would change after setting up a new project based on his template.
@@ -20,7 +24,8 @@ I used the template provided in Ankur Kothari's tutorial (see Links) and it work
   3. Change Architectures to "Standard (32/64-bit Intel)"
   4. Change Valid Architectures to "i386 x86_64"
   5. Set Build Products Path to `$(QS_BUILD_ROOT)/build`
-  6. Create a new user-defined setting called `QS_BUILD_ROOT` and set it to `/tmp/QS`
+  6. Change the Deployment Target to 10.6
+  7. Create a new user-defined setting called `QS_BUILD_ROOT` and set it to `/tmp/QS`
 
 Etienne Samson offers this alternate technique:
 
