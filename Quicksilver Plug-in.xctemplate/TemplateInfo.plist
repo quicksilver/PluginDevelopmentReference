@@ -54,7 +54,7 @@
 			</array>
 			<key>Frameworks</key>
 			<array>
-				<string>Cocoa</string>
+				<!-- <string>Cocoa</string> -->
 				<!-- <string>ScriptingBridge</string> -->
 			</array>
 <!--
@@ -77,36 +77,123 @@
 			<key>Type</key>
 			<string>popup</string>
 			<key>Default</key>
-			<string>Objective-C</string>
+			<string>Standard</string>
 			<key>Units</key>
 			<dict>
-				<key>C</key>
+				<key>Standard</key>
 				<dict>
 					<key>Targets</key>
 					<array>
 						<dict>
 							<key>Frameworks</key>
 							<array>
-								<string>CoreFoundation</string>
+								<string>Cocoa</string>
 							</array>
 						</dict>
 					</array>
 					<key>Nodes</key>
 					<array>
-						<string>main.c</string>
+						<string>___PACKAGENAME___-Prefix.pch:objC:importCocoa</string>
+						<string>___PACKAGENAMEASIDENTIFIER___Action.h</string>
+						<string>___PACKAGENAMEASIDENTIFIER___Action.m</string>
+						<string>___PACKAGENAMEASIDENTIFIER___Source.h</string>
+						<string>___PACKAGENAMEASIDENTIFIER___Source.m</string>
+						<string>bltrversion</string>
+						<string>___PACKAGENAME___-Info.plist:NSPrincipalClass</string>
 					</array>
 					<key>Definitions</key>
 					<dict>
-						<key>main.c</key>
+						<key>___PACKAGENAME___-Info.plist:NSPrincipalClass</key>
+						<string>&lt;key&gt;NSPrincipalClass&lt;/key&gt;
+&lt;string&gt;___PACKAGENAMEASIDENTIFIER___&lt;/string&gt;
+</string>
+						<key>___PACKAGENAMEASIDENTIFIER___Action.h</key>
 						<dict>
 							<key>Path</key>
-							<string>main.c</string>
-							<key>Group</key>
-							<string>Supporting Files</string>
+							<string>___PACKAGENAMEASIDENTIFIER___Action.h</string>
+						</dict>
+						<key>___PACKAGENAMEASIDENTIFIER___Action.m</key>
+						<dict>
+							<key>Path</key>
+							<string>___PACKAGENAMEASIDENTIFIER___Action.m</string>
+						</dict>
+						<key>___PACKAGENAMEASIDENTIFIER___Source.h</key>
+						<dict>
+							<key>Path</key>
+							<string>___PACKAGENAMEASIDENTIFIER___Source.h</string>
+						</dict>
+						<key>___PACKAGENAMEASIDENTIFIER___Source.m</key>
+						<dict>
+							<key>Path</key>
+							<string>___PACKAGENAMEASIDENTIFIER___Source.m</string>
+						</dict>
+						<key>bltrversion</key>
+						<dict>
+							<key>Path</key>
+							<string>bltrversion</string>
+							<key>TargetIndices</key>
+							<array/>
 						</dict>
 					</dict>
 				</dict>
-				<key>Objective-C</key>
+				<key>Scripting Bridge</key>
+				<dict>
+					<key>Targets</key>
+					<array>
+						<dict>
+							<key>Frameworks</key>
+							<array>
+								<string>Cocoa</string>
+								<string>ScriptingBridge</string>
+							</array>
+						</dict>
+					</array>
+					<key>Nodes</key>
+					<array>
+						<string>___PACKAGENAME___-Prefix.pch:objC:importCocoa</string>
+						<string>___PACKAGENAMEASIDENTIFIER___Action.h</string>
+						<string>___PACKAGENAMEASIDENTIFIER___Action.m</string>
+						<string>___PACKAGENAMEASIDENTIFIER___Source.h</string>
+						<string>___PACKAGENAMEASIDENTIFIER___Source.m</string>
+						<string>bltrversion</string>
+						<string>___PACKAGENAME___-Info.plist:NSPrincipalClass</string>
+					</array>
+					<key>Definitions</key>
+					<dict>
+						<key>___PACKAGENAME___-Info.plist:NSPrincipalClass</key>
+						<string>&lt;key&gt;NSPrincipalClass&lt;/key&gt;
+&lt;string&gt;___PACKAGENAMEASIDENTIFIER___&lt;/string&gt;
+</string>
+						<key>___PACKAGENAMEASIDENTIFIER___Action.h</key>
+						<dict>
+							<key>Path</key>
+							<string>___PACKAGENAMEASIDENTIFIER___Action.h</string>
+						</dict>
+						<key>___PACKAGENAMEASIDENTIFIER___Action.m</key>
+						<dict>
+							<key>Path</key>
+							<string>___PACKAGENAMEASIDENTIFIER___Action.m</string>
+						</dict>
+						<key>___PACKAGENAMEASIDENTIFIER___Source.h</key>
+						<dict>
+							<key>Path</key>
+							<string>___PACKAGENAMEASIDENTIFIER___Source.h</string>
+						</dict>
+						<key>___PACKAGENAMEASIDENTIFIER___Source.m</key>
+						<dict>
+							<key>Path</key>
+							<string>___PACKAGENAMEASIDENTIFIER___Source.m</string>
+						</dict>
+						<key>bltrversion</key>
+						<dict>
+							<key>Path</key>
+							<string>bltrversion</string>
+							<key>TargetIndices</key>
+							<array/>
+						</dict>
+					</dict>
+				</dict>
+				<key>Interface</key>
 				<dict>
 					<key>Targets</key>
 					<array>
