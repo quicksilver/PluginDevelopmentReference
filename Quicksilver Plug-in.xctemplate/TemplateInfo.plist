@@ -99,14 +99,9 @@
 						<string>___PACKAGENAMEASIDENTIFIER___Source.h</string>
 						<string>___PACKAGENAMEASIDENTIFIER___Source.m</string>
 						<string>bltrversion</string>
-						<string>___PACKAGENAME___-Info.plist:NSPrincipalClass</string>
 					</array>
 					<key>Definitions</key>
 					<dict>
-						<key>___PACKAGENAME___-Info.plist:NSPrincipalClass</key>
-						<string>&lt;key&gt;NSPrincipalClass&lt;/key&gt;
-&lt;string&gt;___PACKAGENAMEASIDENTIFIER___&lt;/string&gt;
-</string>
 						<key>___PACKAGENAMEASIDENTIFIER___Action.h</key>
 						<dict>
 							<key>Path</key>
@@ -156,14 +151,9 @@
 						<string>___PACKAGENAMEASIDENTIFIER___Source.h</string>
 						<string>___PACKAGENAMEASIDENTIFIER___Source.m</string>
 						<string>bltrversion</string>
-						<string>___PACKAGENAME___-Info.plist:NSPrincipalClass</string>
 					</array>
 					<key>Definitions</key>
 					<dict>
-						<key>___PACKAGENAME___-Info.plist:NSPrincipalClass</key>
-						<string>&lt;key&gt;NSPrincipalClass&lt;/key&gt;
-&lt;string&gt;___PACKAGENAMEASIDENTIFIER___&lt;/string&gt;
-</string>
 						<key>___PACKAGENAMEASIDENTIFIER___Action.h</key>
 						<dict>
 							<key>Path</key>
@@ -212,14 +202,9 @@
 						<string>___PACKAGENAMEASIDENTIFIER___Source.h</string>
 						<string>___PACKAGENAMEASIDENTIFIER___Source.m</string>
 						<string>bltrversion</string>
-						<string>___PACKAGENAME___-Info.plist:NSPrincipalClass</string>
 					</array>
 					<key>Definitions</key>
 					<dict>
-						<key>___PACKAGENAME___-Info.plist:NSPrincipalClass</key>
-						<string>&lt;key&gt;NSPrincipalClass&lt;/key&gt;
-&lt;string&gt;___PACKAGENAMEASIDENTIFIER___&lt;/string&gt;
-</string>
 						<key>___PACKAGENAMEASIDENTIFIER___Action.h</key>
 						<dict>
 							<key>Path</key>
