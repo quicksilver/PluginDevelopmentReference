@@ -73,7 +73,7 @@
 			<key>Name</key>
 			<string>Language</string>
 			<key>Description</key>
-			<string>What language to use for the plug-in.</string>
+			<string>What type of plug-in.</string>
 			<key>Type</key>
 			<string>popup</string>
 			<key>Default</key>
@@ -94,6 +94,7 @@
 					<key>Nodes</key>
 					<array>
 						<string>___PACKAGENAME___-Prefix.pch:objC:importCocoa</string>
+						<string>___PACKAGENAME___-Prefix.pch:importQuicksilver</string>
 						<string>___PACKAGENAMEASIDENTIFIER___Action.h</string>
 						<string>___PACKAGENAMEASIDENTIFIER___Action.m</string>
 						<string>___PACKAGENAMEASIDENTIFIER___Source.h</string>
@@ -146,6 +147,7 @@
 					<key>Nodes</key>
 					<array>
 						<string>___PACKAGENAME___-Prefix.pch:objC:importCocoa</string>
+						<string>___PACKAGENAME___-Prefix.pch:importQuicksilver</string>
 						<string>___PACKAGENAMEASIDENTIFIER___Action.h</string>
 						<string>___PACKAGENAMEASIDENTIFIER___Action.m</string>
 						<string>___PACKAGENAMEASIDENTIFIER___Source.h</string>
@@ -197,6 +199,7 @@
 					<key>Nodes</key>
 					<array>
 						<string>___PACKAGENAME___-Prefix.pch:objC:importCocoa</string>
+						<string>___PACKAGENAME___-Prefix.pch:importQuicksilver</string>
 						<string>___PACKAGENAMEASIDENTIFIER___Action.h</string>
 						<string>___PACKAGENAMEASIDENTIFIER___Action.m</string>
 						<string>___PACKAGENAMEASIDENTIFIER___Source.h</string>
@@ -244,6 +247,9 @@
 	</array>
 	<key>Definitions</key>
 	<dict>
+		<key>*:importQuicksilver</key>
+		<string>#import &lt;QSCore/QSCore.h&gt;
+		</string>
 		<key>___PACKAGENAME___-Info.plist:qsplugin</key>
 		<string>&lt;key&gt;CFBundleDevelopmentRegion&lt;/key&gt;
 &lt;string&gt;English&lt;/string&gt;
