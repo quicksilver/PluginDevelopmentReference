@@ -35,8 +35,8 @@ Once the project has been created, there are some manual steps left to complete.
   7. Select the project on the right where you see "PROJECT" and "TARGETS".
   8. Under the Info tab, in the Configurations section, expand both Debug and Release
   9. Under "Based on Configuration File", set the Debug project to "Debug" and the target to "QSPlugIn_Debug". Do the same under Release (using the configurations with "Release" in the name, of course.)
-  10. Switch over the the project's Build Settings tab. Select anything that's bold and hit Delete. (Bold indicates a setting in the project is overriding a setting from the configurations we just added. By "deleting" it, all you're doing is reverting it to what's in the configuration. This will prevent you from having to change you plug-in's build settings as things change in the core application.)
-  11. Personally, I don't like the way the files are laid out by default, so I rename some and move some around but that's a lot of work. If you have an opinion on such matters, I'll assume you don't need me to tell you how to make the changes.
+  10. Switch over the the project's Build Settings tab. Select anything that's bold and hit Delete, except Product Name. (Bold indicates a setting in the project is overriding a setting from the configurations we just added. By "deleting" it, all you're doing is reverting it to what's in the configuration. This will prevent you from having to change you plug-in's build settings as things change in the core application.)
+  11. Personally, I don't like the way the files are laid out by default, so I rename some and move some around but that's a lot of work. If you have an opinion on such matters, I'll assume you don't need me to tell you how to make the changes. At the very least, you'll need to make a symbolic link in your project's directory: `ln -s Blah/Blah-Info.plist Info.plist`
   12. Create a `.gitignore` file in the root directory of the project. It should contain at least:
   
         .svn
@@ -58,7 +58,7 @@ Once the project has been created, there are some manual steps left to complete.
         *.xcworkspace
         *.xcuserdatad
 
-You should now have a plug-in that will build. If you want to use [Scripting Bridge](#scripting_bridge), see the additional steps in that section.
+You should now have a plug-in that will build. (You might need to close and re-open the project.) If you want to use [Scripting Bridge](#scripting_bridge), see the additional steps in that section.
 
 Many of the items in the template's `Info.plist` are named "SomethingTemplate". This prevents Quicksilver from having to process unused features. If you need to use settings in any of these sections, just rename them, removing "Template" from the end.
 
@@ -828,7 +828,7 @@ In addition to the steps from [Getting Started](#getting_started), you'll need t
         sdef "$INPUT_FILE_PATH" | sdp -fh -o "$DERIVED_FILES_DIR" --basename "$INPUT_FILE_BASE"	--bundleid `defaults read "$INPUT_FILE_PATH/Contents/Info" CFBundleIdentifier`
   
   9. Add an output file with the path `$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).h`
-  10. Add a line to import the resulting header file to your plug-in's `.pch` file. For example, if you added Safari, you'd enter:
+  10. Add a line to import the resulting header file to the appropriate header files in your project. For example, if you added Safari, you'd enter:
   
         #import "Safari.h"
         
