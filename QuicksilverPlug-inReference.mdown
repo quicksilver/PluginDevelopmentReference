@@ -58,26 +58,7 @@ Once the project has been created, there are some manual steps left to complete.
         *.xcworkspace
         *.xcuserdatad
 
-You should now have a plug-in that will build. If you want to use Scripting Bridge, there are a few more steps.
-
-  1. Drag the application(s) you want scripting support for into your project. Don't let it copy the files.
-  2. Again, use the Utilities panel to change the location for each application to "Absolute Path".
-  3. Select the project on the left, then select the target (under TARGETS) on the right.
-  4. Open the "Build Phases" tab.
-  5. Drag the application(s) to the "Compile Sources" section and make sure it's the first thing on the list.
-  6. Go to the "Build Rules" tab.
-  7. Add a new build rule, set Process to "Source files with names matching" and enter `*.app`
-  8. Select "Custom script" and enter this command:
-  
-        sdef "$INPUT_FILE_PATH" | sdp -fh -o "$DERIVED_FILES_DIR" --basename "$INPUT_FILE_BASE"
-		--bundleid `defaults read "$INPUT_FILE_PATH/Contents/Info" CFBundleIdentifier`
-  
-  9. Add an output file with the path `$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).h`
-  10. Add a line to import the resulting header file to your plug-in's `.pch` file. For example, if you added Safari, you'd enter:
-  
-        #import "Safari.h"
-        
-      This file won't exist until you build for the first time.
+You should now have a plug-in that will build. If you want to use [Scripting Bridge](#scripting_bridge), see the additional steps in that section.
 
 Many of the items in the template's `Info.plist` are named "SomethingTemplate". This prevents Quicksilver from having to process unused features. If you need to use settings in any of these sections, just rename them, removing "Template" from the end.
 
@@ -827,6 +808,74 @@ To get the same list but sort by rank (typically determined by how often a user 
 
 A lot can be figured out by looking through `QSObject.m`. If you really want to track down *everything* `QSObject` provides, search for "@implementation QSObject" in the Quicksilver source and stare in horror at the number of results.
 
+## Scripting Bridge ##
+
+If you plan to use the Scripting Bridge in your plug-in, here are some tips.
+
+### Setting Up the Project ##
+
+In addition to the steps from [Getting Started](#getting_started), you'll need to do this:
+
+  1. Drag the application(s) you want scripting support for into your project. Don't let it copy the files.
+  2. Again, use the Utilities panel to change the location for each application to "Absolute Path".
+  3. Select the project on the left, then select the target (under TARGETS) on the right.
+  4. Open the "Build Phases" tab.
+  5. Drag the application(s) to the "Compile Sources" section and make sure it's the first thing on the list.
+  6. Go to the "Build Rules" tab.
+  7. Add a new build rule, set Process to "Source files with names matching" and enter `*.app`
+  8. Select "Custom script" and enter this command:
+  
+        sdef "$INPUT_FILE_PATH" | sdp -fh -o "$DERIVED_FILES_DIR" --basename "$INPUT_FILE_BASE"	--bundleid `defaults read "$INPUT_FILE_PATH/Contents/Info" CFBundleIdentifier`
+  
+  9. Add an output file with the path `$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).h`
+  10. Add a line to import the resulting header file to your plug-in's `.pch` file. For example, if you added Safari, you'd enter:
+  
+        #import "Safari.h"
+        
+      This file won't exist until you build for the first time.
+
+### Overview ###
+
+Scripting Bridge is typically an excellent way to get information from an application, but a terrible way to control it. Unfortunately, for Quicksilver you basically need the opposite.
+
+Keep in mind at all times that in order to interact with an application via Scripting Bridge, the application must be running. As a result, you should not use it to add objects to the catalog. Users will not appreciate applications launching seemingly at random (when Quicksilver updates the catalog entry). You need to find another way to get the same info (typically by parsing files on disk somewhere).
+
+The type of objects Scripting Bridge is appropriate for is real-time items from an application, like "currently playing track", or "all open tabs". In most cases such as this, you should check `[appname isRunning]` before trying to get the information.
+
+When defining actions on the other hand, it's generally OK to blindly interact with the application. For instance, if the user wants to play a track, it makes sense to open iTunes if it isn't already running.
+
+### Performance ###
+
+I won't try to repeat what's in the [official documentation][sbdoc], but you should look it over. It's not very long. In particular, see the sections on Using Element Arrays and improving performance. The general rule is: Minimize the number of Apple Events.
+
+Having said that, there are exceptions I've run across, so you might have to get creative. For instance, filtering all tracks in iTunes by artist takes around a 10th of a second, while filtering by albumArtist takes nearly 5 minutes. Requesting the value of albumArtist for all tracks (with `valueForKey`) is lighting fast. So it's faster in this case to get all the albumArtist values and manually iterate doing string comparisons, even if you have to generate an Apple Event for each track later on to get more detail.
+
+### Weirdness ###
+
+There are some strange things you're going to run across. Here are some known examples.
+
+#### get ####
+
+You generally don't need to call `get` on an `SBObject` or `SBElementArray`… except when you do. My advice is to avoid it unless something that seems like it should work just isn't working. Then add a call to `get`. One known example is when trying to use FourCharCodes in an `NSPredicate`. This should work, but doesn't:
+
+    NSArray *iTunesDJplaylists = [[library playlists] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"specialKind == %i", iTunesESpKPartyShuffle]];
+
+This works:
+
+    NSArray *iTunesDJplaylists = [[[library playlists] get] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"specialKind == %i", iTunesESpKPartyShuffle]];
+
+If the predicate just uses strings, it seems to work fine without `get`. Huh?
+
+#### SBElementArray ####
+
+An `SBElementArray` (according to the documentation) is just an `NSMutableArray` and can be treated like one… except when it can't (which of course is *not* documented). In my experience, you can remove all objects or remove specific ones, but adding objects is problematic. It almost never works, but when it does, it seems to require something like
+
+    [array insertObject:newThing atIndex:0];
+
+My only advice is to start searching the web for answers when you get into this situation.
+
+[sbdoc]: http://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/ScriptingBridgeConcepts/Introduction/Introduction.html
+
 ## Building and Testing ##
 
 When testing a newly built plug-in, if things don't work as expected, don't go back to the code looking for the problem right away. It may be that you're testing against cached data from older code. This process seems to ensure that you're actually testing your latest build.
@@ -838,12 +887,12 @@ When testing a newly built plug-in, if things don't work as expected, don't go b
 
 If you're trying to work on one of the existing plug-ins and you can't get it to build, here are a couple of things that have worked for me.
 
-  1. Build Quicksilver from source (Release, not Debug). The process puts a lot of things in `/tmp/QS/build/release/` that the source for the plug-ins expect to find there.
+  1. Build Quicksilver from source (Release, not Debug). The process puts a lot of things in `/tmp/QS/build/Release/` that the source for the plug-ins expect to find there.
   2. Tell Xcode to do a "Release" build of the plug-in instead of "Debug". (I'm not sure what all the ramifications are with this, but it seems to work.)
 
 ### Debugging Plugins ###
 
-To be able to debug plugins using an actual debugger instead of just NSLog() statements, there are a few steps that need to be done. Most of this information is from an [old thread on the QS mailinglist](http://groups.google.com/group/blacktree-quicksilver/browse_thread/thread/ccf43942bc5eb4a1). Some of these steps are already described in the **Getting Started** section in the beginning of this guide, just check again to make sure everything is set up correctly.
+To be able to debug plugins using an actual debugger instead of just `NSLog()` statements, there are a few steps that need to be done. Most of this information is from an [old thread on the QS mailinglist](http://groups.google.com/group/blacktree-quicksilver/browse_thread/thread/ccf43942bc5eb4a1). Some of these steps are already described in the **Getting Started** section in the beginning of this guide, just check again to make sure everything is set up correctly.
 
   0. Make a backup of everything Quicksilver. <!-- TODO maybe some tips about this? -->
   1. Disable "Load symbols lazily" in the XCode preferences, under the Debugging tab.
