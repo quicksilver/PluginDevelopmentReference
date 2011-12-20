@@ -5,9 +5,6 @@
 //  Created by ___FULLUSERNAME___ on ___DATE___.
 //
 
-#import <QSCore/QSObject.h>
-#import <QSCore/QSActionProvider.h>
-
 #define k___PROJECTNAMEASIDENTIFIER___Action @"___PROJECTNAMEASIDENTIFIER___Action"
 
 @interface ___PROJECTNAMEASIDENTIFIER___Action : QSActionProvider

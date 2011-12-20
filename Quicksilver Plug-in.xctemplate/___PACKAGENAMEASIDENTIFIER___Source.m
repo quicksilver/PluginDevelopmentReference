@@ -6,7 +6,6 @@
 //
 
 #import "___PROJECTNAMEASIDENTIFIER___Source.h"
-#import <QSCore/QSObject.h>
 
 @implementation ___PROJECTNAMEASIDENTIFIER___Source
 
