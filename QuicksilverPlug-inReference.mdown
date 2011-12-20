@@ -1,9 +1,10 @@
-# Quicksilver (B5X) Plug-ins #
+# Quicksilver Plug-ins #
 
 A haphazard reference by Rob McBroom <qsplugins@skurfer.com> with contributions from
 
   * Henning Jungkurth
   * Patrick Robertson
+  * Etienne Samson
 
 ## Intro ##
 
@@ -11,40 +12,84 @@ I wanted to write a plug-in. I found a bit of documentation on adding Actions, b
 
 I'll assume you're working on a plug-in called "Blah" when giving examples.
 
-<!-- 
-TODO document adding Scripting Bridge support to the project
--->
-
 ## Getting Started ##
 
-I used the template provided in Ankur Kothari's tutorial (see Links) and it worked fine. There are a few things I would change after setting up a new project based on his template.
+To compile most plug-ins, you'll need to build Quicksilver itself [from source][qssource]. (It'll put the stuff you need in `/tmp/QS`.) To build your plug-in with the Debug configuration, you'll need to first build Quicksilver with its Debug configuration. Same for the Release configuration.
 
-  1. The `BlahAction.h` imports itself. Remove that line.
-  2. Change the SDK to be "Latest Mac OS X". (If you don't even have the 10.4 SDK installed, like me, you'll see an error that will make this obvious.)
-  3. Change Architectures to "Standard (32/64-bit Intel)"
-  4. Change Valid Architectures to "i386 x86_64"
-  5. Set Build Products Path to `$(QS_BUILD_ROOT)/build`
-  6. Change the Deployment Target to 10.6
-  7. Create a new user-defined setting called `QS_BUILD_ROOT` and set it to `/tmp/QS`
+To create a new plug-in:
 
-Etienne Samson offers this alternate technique:
+  1. Get the Xcode Project template from [the GitHub repository][ghref]
+  2. Copy `Quicksilver Plug-in.xctemplate` to `~/Library/Developer/Xcode/Templates/Application Plug-in`
+  3. Create a new project in Xcode. You should see "Quicksilver Plug-in" in the "Application Plug-in" category.
+  4. There are three types to choose from. Standard, Scripting Bridge (which is like Standard but adds the Scripting Bridge framework), and Interface which is mainly useless for now.
+  5. I would tell it not to create a Git repo automatically, since there will be a lot of meaningless changes right out of the gate.
 
-> For the record, the setup is made easier by the xcconfig files.
-> 
-> 1) Go grab QS source code from GitHub.  
-> 2) Build. It will create /tmp/QS/Configuration, which is an rsync-ed copy of the one in your working copy.  
-> 3) Create a new project wherever you like.  
-> 4) Drag the /tmp/QS/Configuration folder in your new project (don't "add files to target")  
-> 5) Set the project configurations to be dependent on the xcconfig files. *Delete everything that show up in bold*  
-> 6) Create a new bundle target in Xcode  
-> 7) Set your bundle configuration to the QSPlugin xcconfig files. *Delete everything that show up in bold* EXCEPT the Product Name  
-> 8) Build. You should end up with a *.qsplugin in /tmp/QS/build/Debug/ (depending on configuration).
+Once the project has been created, there are some manual steps left to complete.
 
-I'm sure this is good advice, but I don't know enough about Xcode to follow most of those steps, so I didn't. You probably should if you can.
+  1. Delete `bltrversion` from the project, removing references only. We needed it to get copied into the project's directory, but we don't need to see it in Xcode.
+  2. Do a Release build of Quicksilver to get some things created in `/tmp/QS`.
+  3. Drag `/tmp/QS/Configuration` to the files area of your project. Uncheck "Copy items…" and select "Create groups…".
+  4. Select the new "Configuration" folder in Xcode and bring up the Utilities panel on the right.
+  5. Change the Location to "Absolute Path".
+  6. Select the project at the top of the list of files on the left.
+  7. Select the project on the right where you see "PROJECT" and "TARGETS".
+  8. Under the Info tab, in the Configurations section, expand both Debug and Release
+  9. Under "Based on Configuration File", set the Debug project to "Debug" and the target to "QSPlugIn_Debug". Do the same under Release (using the configurations with "Release" in the name, of course.)
+  10. Switch over the the project's Build Settings tab. Select anything that's bold and hit Delete. (Bold indicates a setting in the project is overriding a setting from the configurations we just added. By "deleting" it, all you're doing is reverting it to what's in the configuration. This will prevent you from having to change you plug-in's build settings as things change in the core application.)
+  11. Personally, I don't like the way the files are laid out by default, so I rename some and move some around but that's a lot of work. If you have an opinion on such matters, I'll assume you don't need me to tell you how to make the changes.
+  12. Create a `.gitignore` file in the root directory of the project. It should contain at least:
+  
+        .svn
+        .DS_Store
+        ._.*
+        *.o
+        build
+        Makefile
+        autom4te.cache
+        *~
+        *.pbxuser
+        *.perspectivev3
+        *.mode1v3
+        *.mode2v3
+        *.pbxuser
+        *.tm_build_errors
+        *.tmproj
+        Developer.xcconfig
+        *.xcworkspace
+        *.xcuserdatad
+
+You should now have a plug-in that will build. If you want to use Scripting Bridge, there are a few more steps.
+
+  1. Drag the application(s) you want scripting support for into your project. Don't let it copy the files.
+  2. Again, use the Utilities panel to change the location for each application to "Absolute Path".
+  3. Select the project on the left, then select the target (under TARGETS) on the right.
+  4. Open the "Build Phases" tab.
+  5. Drag the application(s) to the "Compile Sources" section and make sure it's the first thing on the list.
+  6. Go to the "Build Rules" tab.
+  7. Add a new build rule, set Process to "Source files with names matching" and enter `*.app`
+  8. Select "Custom script" and enter this command:
+  
+        sdef "$INPUT_FILE_PATH" | sdp -fh -o "$DERIVED_FILES_DIR" --basename "$INPUT_FILE_BASE" --bundleid `defaults read "$INPUT_FILE_PATH/Contents/Info" CFBundleIdentifier`
+  
+  9. Add an output file with the path `$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).h`
+  10. Add a line to import the resulting header file to your plug-in's `.pch` file. For example, if you added Safari, you'd enter:
+  
+        #import "Safari.h"
+        
+      This file won't exist until you build for the first time.
 
 Many of the items in the template's `Info.plist` are named "SomethingTemplate". This prevents Quicksilver from having to process unused features. If you need to use settings in any of these sections, just rename them, removing "Template" from the end.
 
-To compile most plug-ins, you'll need to build Quicksilver itself from source. (It'll put the stuff you need in `/tmp/QS`.) To build your plug-in with the Debug configuration, you'll need to first build Quicksilver with its Debug configuration. Same for the Release configuration.
+[ghref]: https://github.com/quicksilver/PluginDevelopmentReference
+[qssource]: https://github.com/quicksilver/Quicksilver
+
+### bltrversion ###
+
+A note on this executable might be helpful. All this does is modify your project's `Info.plist` every time you build to increment the build version. There are a couple of things to keep in mind as a result.
+
+  * Git will almost always show this file as having changed. Don't commit the change unless it's actually what you want.
+  * You may have built the thing 250 times since the last commit, but do you really want the build number to jump that far when you were probably just testing some small changes? No. So either manually revert it to the last committed value, or increment it to something reasonable.
+  * You can normally install an updated plug-in by double-clicking it in Finder, but it will only replace the old one if it has a higher build number. If you lowered the number recently in order to commit something more reasonable, you might have to manually remove the old version (with a higher build number) before you can install the latest.
 
 ## Documentation ##
 
@@ -838,3 +883,4 @@ Ankur Kothari's nice tutorial - This really helps get you started, but doesn't d
   * [Info.plist](http://lipidity.com/apple/anatomy-of-a-plugin-infoplist-part-1)
   * [Actions](http://lipidity.com/apple/anatomy-of-a-plugin-part-2)
 
+[Some information on setting up a project for Scripting Bridge](http://robnapier.net/blog/scripting-bridge-265)
