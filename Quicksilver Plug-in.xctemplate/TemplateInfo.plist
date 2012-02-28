@@ -17,6 +17,25 @@
 		<string>com.apple.dt.unit.bundleBase</string>
 		<string>com.apple.dt.unit.macBase</string>
 	</array>
+	<key>Project</key>
+	<dict>
+		<key>BasedOn</key>
+		<dict>
+			<key>Debug</key>
+			<string>Configuration/Debug.xcconfig</string>
+			<key>Release</key>
+			<string>Configuration/Release.xcconfig</string>
+		</dict>
+		<key>Configurations</key>
+		<dict>
+			<key>Debug</key>
+			<dict/>
+			<key>Release</key>
+			<dict/>
+		</dict>
+		<key>SharedSettings</key>
+		<dict/>
+	</dict>
 	<key>Targets</key>
 	<array>
 		<dict>
@@ -47,22 +66,27 @@
 					<key>ShellPath</key>
 					<string>/bin/sh</string>
 					<key>ShellScript</key>
-					<string>"$SRCROOT/___PACKAGENAME___/bltrversion" "$INFOPLIST_FILE"</string>
+					<string>&quot;$SRCROOT/___PACKAGENAME___/bltrversion&quot; &quot;$INFOPLIST_FILE&quot;</string>
 					<key>RunOnlyForDeploymentPostprocessing</key>
 					<true/>
 				</dict>
 			</array>
 			<key>Frameworks</key>
-			<array>
-				<!-- <string>Cocoa</string> -->
-				<!-- <string>ScriptingBridge</string> -->
-			</array>
-<!--
-			<key>OtherFrameworks</key>
-			<array>
-				<string>Foundation</string>
-			</array>
--->
+			<array/>
+			<key>Configurations</key>
+			<dict>
+				<key>Debug</key>
+				<dict/>
+				<key>Release</key>
+				<dict/>
+			</dict>
+			<key>BasedOn</key>
+			<dict>
+				<key>Debug</key>
+				<string>Configuration/QSPlugIn_Debug.xcconfig</string>
+				<key>Release</key>
+				<string>Configuration/QSPlugIn_Release.xcconfig</string>
+			</dict>
 		</dict>
 	</array>
 	<key>Options</key>
@@ -71,7 +95,7 @@
 			<key>Identifier</key>
 			<string>quicksilverplugin</string>
 			<key>Name</key>
-			<string>Language</string>
+			<string>Plug-in Type</string>
 			<key>Description</key>
 			<string>What type of plug-in.</string>
 			<key>Type</key>
@@ -97,7 +121,6 @@
 						<string>___PACKAGENAMEASIDENTIFIER___Action.m</string>
 						<string>___PACKAGENAMEASIDENTIFIER___Source.h</string>
 						<string>___PACKAGENAMEASIDENTIFIER___Source.m</string>
-						<string>bltrversion</string>
 					</array>
 					<key>Definitions</key>
 					<dict>
@@ -120,13 +143,6 @@
 						<dict>
 							<key>Path</key>
 							<string>___PACKAGENAMEASIDENTIFIER___Source.m</string>
-						</dict>
-						<key>bltrversion</key>
-						<dict>
-							<key>Path</key>
-							<string>bltrversion</string>
-							<key>TargetIndices</key>
-							<array/>
 						</dict>
 					</dict>
 				</dict>
@@ -148,7 +164,6 @@
 						<string>___PACKAGENAMEASIDENTIFIER___Action.m</string>
 						<string>___PACKAGENAMEASIDENTIFIER___Source.h</string>
 						<string>___PACKAGENAMEASIDENTIFIER___Source.m</string>
-						<string>bltrversion</string>
 					</array>
 					<key>Definitions</key>
 					<dict>
@@ -171,13 +186,6 @@
 						<dict>
 							<key>Path</key>
 							<string>___PACKAGENAMEASIDENTIFIER___Source.m</string>
-						</dict>
-						<key>bltrversion</key>
-						<dict>
-							<key>Path</key>
-							<string>bltrversion</string>
-							<key>TargetIndices</key>
-							<array/>
 						</dict>
 					</dict>
 				</dict>
@@ -198,7 +206,6 @@
 						<string>___PACKAGENAMEASIDENTIFIER___Action.m</string>
 						<string>___PACKAGENAMEASIDENTIFIER___Source.h</string>
 						<string>___PACKAGENAMEASIDENTIFIER___Source.m</string>
-						<string>bltrversion</string>
 					</array>
 					<key>Definitions</key>
 					<dict>
@@ -222,13 +229,6 @@
 							<key>Path</key>
 							<string>___PACKAGENAMEASIDENTIFIER___Source.m</string>
 						</dict>
-						<key>bltrversion</key>
-						<dict>
-							<key>Path</key>
-							<string>bltrversion</string>
-							<key>TargetIndices</key>
-							<array/>
-						</dict>
 					</dict>
 				</dict>
 			</dict>
@@ -237,6 +237,8 @@
 	<key>Nodes</key>
 	<array>
 		<string>___PACKAGENAME___-Info.plist:qsplugin</string>
+		<string>Configuration</string>
+		<string>bltrversion</string>
 	</array>
 	<key>Definitions</key>
 	<dict>
@@ -484,6 +486,20 @@
 	&lt;/array&gt;
 &lt;/dict&gt;
 </string>
+		<key>bltrversion</key>
+		<dict>
+			<key>Path</key>
+			<string>bltrversion</string>
+			<key>TargetIndices</key>
+			<array/>
+		</dict>
+		<key>Configuration</key>
+		<dict>
+			<key>Path</key>
+			<string>/tmp/QS/Configuration</string>
+			<key>PathType</key>
+			<string>Absolute</string>
+		</dict>
 	</dict>
 </dict>
 </plist>
