@@ -47,7 +47,7 @@
 					<key>ShellPath</key>
 					<string>/bin/sh</string>
 					<key>ShellScript</key>
-					<string>$SRCROOT/___PACKAGENAME___/bltrversion $INFOPLIST_FILE</string>
+					<string>"$SRCROOT/___PACKAGENAME___/bltrversion" "$INFOPLIST_FILE"</string>
 					<key>RunOnlyForDeploymentPostprocessing</key>
 					<true/>
 				</dict>
