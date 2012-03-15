@@ -152,6 +152,30 @@ replacement = open(target_file, 'w')
 replacement.writelines(new_contents)
 replacement.close()
 
+## create a default .gitignore
+gitignore = '''.svn
+.DS_Store
+._.*
+*.o
+build
+Makefile
+autom4te.cache
+*~
+*.pbxuser
+*.perspectivev3
+*.mode1v3
+*.mode2v3
+*.pbxuser
+*.tm_build_errors
+*.tmproj
+Developer.xcconfig
+*.xcworkspace
+*.xcuserdatad
+'''
+gi = open('.gitignore', 'w')
+gi.write(gitignore)
+gi.close()
+
 ## rename Info.plist
 oldplist = '%s/%s-Info.plist' % (project_name, project_name)
 newplist = 'Info.plist'
