@@ -609,6 +609,23 @@ This method determines whether or not your source shows up on the drop-down list
 
 Return FALSE to keep this off of the drop-down. Return TRUE if you want users to be able to add custom entries of this type to their catalog. Keep in mind that you will also need to provide them with some sort of interface to do so.
 
+### Actions ###
+
+If the direct object is irrelavent, you can add actions to the catalog directly. They will appear in the first pane with a default action of "Run" in the second pane. Here's an example of creating a `QSAction` directly.
+
+    NSDictionary *actionDict = [NSDictionary dictionaryWithObjectsAndKeys:
+        @"QSBlahActionProvider", kActionClass,
+        @"doSomething", kActionSelector,
+        @"BlahIcon", kActionIcon,
+        @"Do Something", @"name",
+        nil];
+    
+    newObject = [QSAction actionWithDictionary:actionDict
+        identifier:@“QSBlahDoSomething”
+        bundle:nil];
+
+You could have that in your `objectsForEntry:` method and add `newObject` to the array it returns.
+
 ## Custom Types ##
 
 You may want to add a new type of thing to Quicksilver's catalog that doesn't conform to the existing types Quicksilver knows about. The main reason you'd want to do this is to make your actions apply only to relevant entries. For instance, you may want "SSH to host" as the default for remote hosts. Though hostnames and FQDNs are just strings and can be added to Quicksilver easily, simply adding them to the catalog as strings would cause the default action to be "Open URL" or "Large Type" in most cases. You would either have to choose the SSH action manually every time, or move it up in priority making it the default for all text and URLs, which probably isn't what you want.
