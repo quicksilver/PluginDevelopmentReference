@@ -200,6 +200,16 @@ This section defines catalog entries that should be added by default under Modul
 
 This section defines triggers that should be added by default in the Triggers preferences.
 
+### QSRequirements ###
+
+<!-- TODO give examples -->
+
+Allows you to
+
+  * Require a bundle
+  * Require a minimum version of a bundle
+  * Require a minimum version of Quicksilver
+
 <!-- TODO there's a lot more in the plist -->
 
 ## Actions ##
