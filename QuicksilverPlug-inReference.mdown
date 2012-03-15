@@ -1002,7 +1002,7 @@ My only advice is to start searching the web for answers when you get into this 
 
 [sbdoc]: http://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/ScriptingBridgeConcepts/Introduction/Introduction.html
 
-## Building and Testing ##
+## Troubleshooting ##
 
 When testing a newly built plug-in, if things don't work as expected, don't go back to the code looking for the problem right away. It may be that you're testing against cached data from older code. This process seems to ensure that you're actually testing your latest build.
 
@@ -1011,10 +1011,25 @@ When testing a newly built plug-in, if things don't work as expected, don't go b
   3. Rescan the catalog entries for your plug-in
   4. Relaunch Quicksilver again
 
+If the problem is actually with the plug-in, try these steps.
+
+  1. Check for mistakes in the plist
+  2. Check for mistakes in the plist
+  3. Check for mistakes in the plist
+
+Repeating that was not a typo. If you're convinced that the problem isn't there, take a step back for a few minutes. Maybe, while you have some time to kill, you could go over everything in the plist *again*. :-)
+
+If it won't build at all
+
+  1. If you're doing a Debug build, make sure you've recently built Quicksilver using the Debug configuration. (Files should be in `/tmp/QS/build/Debug`.) Same for Release builds.
+  2. Try cleaning with ⇧⌘K
+
 If you're trying to work on one of the existing plug-ins and you can't get it to build, here are a couple of things that have worked for me.
 
   1. Build Quicksilver from source (Release, not Debug). The process puts a lot of things in `/tmp/QS/build/Release/` that the source for the plug-ins expect to find there.
-  2. Tell Xcode to do a "Release" build of the plug-in instead of "Debug". (I'm not sure what all the ramifications are with this, but it seems to work.)
+  2. Make sure the plug-in is using the `.xcconfig` files and that there aren't any incorrect build settings in the local project that override them.
+  3. In the File Inspector, make sure the paths are correct. (They will sometimes be pointing to a previous developer's home directory.)
+  4. Tell Xcode to do a "Release" build of the plug-in instead of "Debug". (I'm not sure what all the ramifications are with this, but it seems to work.)
 
 ### Debugging Plugins ###
 
