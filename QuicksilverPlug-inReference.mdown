@@ -516,11 +516,43 @@ Example `- (BOOL)indexIsValidFromDate:(NSDate *)indexDate forEntry:(NSDictionary
 
 Quicksilver runs this during scheduled catalog updates (every 10 minutes by default) to ask "Is this catalog entry still up to date?" How you determine the answer to this question is up to you. If this method returns YES/TRUE, Quicksilver moves along without doing anything. If this method returns NO/FALSE, Quicksilver will attempt to update the entry by calling the `objectsForEntry:` method.
 
-You can have this method do nothing but return TRUE of FALSE unconditionally, and that's exactly what it does for many plug-ins. Just keep in mind that this will either cause your source to never get updated (except manually) or cause it to get updated on every single rescan (which may be a performance concern, depending on what it does).
+You can have this method do nothing but return TRUE or FALSE unconditionally, and that's exactly what it does for many plug-ins. Just keep in mind that this will either cause your source to never get updated (except manually) or cause it to get updated on every single rescan (which may be a performance concern, depending on what it does).
 
-`indexDate` and `theEntry` are passed in by Quicksilver. I believe the `indexDate` tells you when the entry was last updated in the catalog. `theEntry` contains information about the entry that you might need (file paths, URLs, etc.).
+`indexDate` and `theEntry` are passed in by Quicksilver. The `indexDate` tells you when the entry was last updated in the catalog. `theEntry` contains information about the entry that you might need (file paths, URLs, etc.).
 
 **NOTE**: This method is not consulted when your plug-in is first installed or when a user selects the entry in the catalog and hits the "rescan" button manually. In other words, if you're checking for errors with your source here to avoid unnecessary rescans, that's good, but you still need to check for errors in `objectsForEntry:` as well, because it will be called at least once.
+
+To rescan your entry when a file is changed:
+
+    - (BOOL)indexIsValidFromDate:(NSDate *)indexDate forEntry:(NSDictionary *)theEntry
+    {
+        // use the plist settings to determine which file to check
+        NSMutableDictionary *settings = [theEntry objectForKey:kItemSettings];
+        NSString *sourceFile = [self fullPathForSettings:settings];
+        // get the last modified date on the source file
+        NSFileManager *manager = [NSFileManager defaultManager];
+        if (![manager fileExistsAtPath:sourceFile isDirectory:NULL]) return YES;
+        NSDate *modDate = [[manager attributesOfItemAtPath:sourceFile error:NULL] fileModificationDate];
+        // compare dates and return whether or not the entry should be rescanned
+        if ([modDate compare:indexDate] == NSOrderedDescending) return NO;
+        // if we fall through to this point, don't rescan by default
+        return YES;
+    }
+
+To scan the entry once when Quicksilver starts, but never again:
+
+    - (BOOL)indexIsValidFromDate:(NSDate *)indexDate forEntry:(NSDictionary *)theEntry {
+        // rescan only if the indexDate is prior to the last launch
+        NSDate *launched = [[NSRunningApplication currentApplication] launchDate];
+        if (launched) {
+            return ([launched compare:indexDate] == NSOrderedAscending);
+        } else {
+            // Quicksilver wasn't launched by LaunchServices - date unknown - rescan to be safe
+            return NO;
+        }
+    }
+
+In the above example, if Quicksilver relaunched itself (instead of being launched at login or via Finder), the `launchDate` will be unavailable, which is why you need to test the result.
 
 #### setQuickIconForObject
 
