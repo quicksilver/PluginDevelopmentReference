@@ -5,9 +5,9 @@
 //  Created by ___FULLUSERNAME___ on ___DATE___.
 //
 
-#define ___PROJECTNAMEASIDENTIFIER___Type @"___PROJECTNAMEASIDENTIFIER___Type"
+#define QS___PROJECTNAMEASIDENTIFIER___Type @"QS___PROJECTNAMEASIDENTIFIER___Type"
 
-@interface ___PROJECTNAMEASIDENTIFIER___Source : QSObjectSource
+@interface QS___PROJECTNAMEASIDENTIFIER___Source : QSObjectSource
 {
 }
 @end

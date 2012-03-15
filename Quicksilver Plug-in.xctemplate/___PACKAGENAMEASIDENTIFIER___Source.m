@@ -7,7 +7,7 @@
 
 #import "___PROJECTNAMEASIDENTIFIER___Source.h"
 
-@implementation ___PROJECTNAMEASIDENTIFIER___Source
+@implementation QS___PROJECTNAMEASIDENTIFIER___Source
 
 - (BOOL)indexIsValidFromDate:(NSDate *)indexDate forEntry:(NSDictionary *)theEntry
 {
@@ -31,8 +31,8 @@
 	QSObject *newObject;
 	
 	newObject=[QSObject objectWithName:@"TestObject"];
-	[newObject setObject:@"" forType:___PROJECTNAMEASIDENTIFIER___Type];
-	[newObject setPrimaryType:___PROJECTNAMEASIDENTIFIER___Type];
+	[newObject setObject:@"" forType:QS___PROJECTNAMEASIDENTIFIER___Type];
+	[newObject setPrimaryType:QS___PROJECTNAMEASIDENTIFIER___Type];
 	[objects addObject:newObject];
 	
 	return objects;
@@ -49,7 +49,7 @@
 - (BOOL)loadIconForObject:(QSObject *)object
 {
 	return NO;
-	id data=[object objectForType:k___PROJECTNAMEASIDENTIFIER___Type];
+	id data=[object objectForType:QS___PROJECTNAMEASIDENTIFIER___Type];
 	[object setIcon:nil];
 	return YES;
 }

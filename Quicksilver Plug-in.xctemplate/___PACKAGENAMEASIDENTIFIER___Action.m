@@ -7,7 +7,7 @@
 
 #import "___PROJECTNAMEASIDENTIFIER___Action.h"
 
-@implementation ___PROJECTNAMEASIDENTIFIER___Action
+@implementation QS___PROJECTNAMEASIDENTIFIER___ActionProvider
 
 - (QSObject *)performActionOnObject:(QSObject *)dObject{
 	return nil;
