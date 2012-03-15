@@ -239,6 +239,7 @@
 		<string>___PACKAGENAME___-Info.plist:qsplugin</string>
 		<string>Configuration</string>
 		<string>bltrversion</string>
+		<string>qs_fix_project.py</string>
 	</array>
 	<key>Definitions</key>
 	<dict>
@@ -258,6 +259,8 @@
 &lt;key&gt;CFBundleSignature&lt;/key&gt;
 &lt;string&gt;????&lt;/string&gt;
 &lt;key&gt;CFBundleVersion&lt;/key&gt;
+&lt;string&gt;1&lt;/string&gt;
+&lt;key&gt;CFBundleShortVersionString&lt;/key&gt;
 &lt;string&gt;1.0&lt;/string&gt;
 &lt;key&gt;QSPlugIn&lt;/key&gt;
 &lt;dict&gt;
@@ -490,6 +493,13 @@
 		<dict>
 			<key>Path</key>
 			<string>bltrversion</string>
+			<key>TargetIndices</key>
+			<array/>
+		</dict>
+		<key>qs_fix_project.py</key>
+		<dict>
+			<key>Path</key>
+			<string>qs_fix_project.py</string>
 			<key>TargetIndices</key>
 			<array/>
 		</dict>
