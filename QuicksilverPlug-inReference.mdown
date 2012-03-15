@@ -552,8 +552,6 @@ Quicksilver calls this in real-time as objects need to be displayed, which is wh
 
 This method does not seem to be called for `QSObject`s created using `objectWithString:`. That method makes a call to `loadIcon:` internally, which must tell Quicksilver that it already has an icon and doesn't need to go look for one.
 
-<!-- TODO document how to add a bundle's icon in the plist -->
-
 #### loadChildrenForObject
 
 Example: `- (BOOL)loadChildrenForObject:(QSObject *)object`
@@ -622,11 +620,13 @@ Now, when you're adding actions to the `Info.plist`, they can use this as a valu
 
 Speaking of actions, if your action(s) need to refer to your custom type, you should add something like this to `BlahAction.h`:
 
-    #define QSBlahType @"QSBlahType"
+    #define QSBlahType @"blah.specific.type"
 
 And then in the various action methods in `BlahAction.m`, you can test for objects of that type with something like this:
 
     if ([dObject containsType:QSBlahType]) {}
+
+This allows you to use code completion and reduce the chance for typing errors. Unfortunately, whenever you refer to the types in your property list, you need to use the actual string the type refers to.
 
 ## QSObject ##
 
@@ -770,7 +770,7 @@ If you have set children for an object so you can right arrow into them, these c
 
 So, before using `[myObject setChildren:children]` to set children for an object, for each of the children `QSObject`s, you should set the parent ID to the identifier of the parent `QSObject`. For example by doing the following for each `QSObject` in the `children` array:
 
-	[childObject setParentID:[myObject identifier]];
+    [childObject setParentID:[myObject identifier]];
 
 Then, once the user arrows back out of the list of children, the correct object will be selected in the main QS pane and also be highlighted in the result list. If this isn't set, the selected child object will remain in the QS pane and the first result will be highlighted in the result list. This can lead to much confusion, so it should be avoided.
 
@@ -919,7 +919,7 @@ If you plan to use the Scripting Bridge in your plug-in, here are some tips.
 In addition to the steps from [Getting Started](#getting_started), you'll need to do this:
 
   1. Drag the application(s) you want scripting support for into your project. Don't let it copy the files.
-  2. Again, use the Utilities panel to change the location for each application to "Absolute Path".
+  2. Use the Utilities panel to change the location for each application to "Absolute Path".
   3. Select the project on the left, then select the target (under TARGETS) on the right.
   4. Open the "Build Phases" tab.
   5. Drag the application(s) to the "Compile Sources" section and make sure it's the first thing on the list.
