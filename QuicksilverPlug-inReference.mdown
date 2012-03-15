@@ -24,41 +24,17 @@ To create a new plug-in:
   4. There are three types to choose from. Standard, Scripting Bridge (which is like Standard but adds the Scripting Bridge framework), and Interface which is mainly useless for now.
   5. I would tell it not to create a Git repo automatically, since there will be a lot of meaningless changes right out of the gate.
 
-Once the project has been created, there are some manual steps left to complete.
+Once the project has been created, it needs a lot of work due to bugs and annoying defaults in Xcode.
 
-  1. Delete `bltrversion` from the project, removing references only. We needed it to get copied into the project's directory, but we don't need to see it in Xcode.
-  2. Do a Release build of Quicksilver to get some things created in `/tmp/QS`.
-  3. Drag `/tmp/QS/Configuration` to the files area of your project. Uncheck "Copy items…" and select "Create groups…".
-  4. Select the new "Configuration" folder in Xcode and bring up the Utilities panel on the right.
-  5. Change the Location to "Absolute Path".
-  6. Select the project at the top of the list of files on the left.
-  7. Select the project on the right where you see "PROJECT" and "TARGETS".
-  8. Under the Info tab, in the Configurations section, expand both Debug and Release
-  9. Under "Based on Configuration File", set the Debug project to "Debug" and the target to "QSPlugIn_Debug". Do the same under Release (using the configurations with "Release" in the name, of course.)
-  10. Switch over the the project's Build Settings tab. Select anything that's bold and hit Delete, except Product Name. (Bold indicates a setting in the project is overriding a setting from the configurations we just added. By "deleting" it, all you're doing is reverting it to what's in the configuration. This will prevent you from having to change you plug-in's build settings as things change in the core application.)
-  11. Personally, I don't like the way the files are laid out by default, so I rename some and move some around but that's a lot of work. If you have an opinion on such matters, I'll assume you don't need me to tell you how to make the changes. At the very least, you'll need to make a symbolic link in your project's directory: `ln -s Blah/Blah-Info.plist Info.plist`
-  12. Create a `.gitignore` file in the root directory of the project. It should contain at least:
-  
-        .svn
-        .DS_Store
-        ._.*
-        *.o
-        build
-        Makefile
-        autom4te.cache
-        *~
-        *.pbxuser
-        *.perspectivev3
-        *.mode1v3
-        *.mode2v3
-        *.pbxuser
-        *.tm_build_errors
-        *.tmproj
-        Developer.xcconfig
-        *.xcworkspace
-        *.xcuserdatad
+  1. Close the project in Xcode
+  2. Go to the project's directory in Terminal
+  3. Run `python Blah/qs_fix_project.py` (where "Blah" is the name of the project)
+  4. Do a Release (or Debug) build of Quicksilver to get some things created in `/tmp/QS`.
+  5. Open the project in Xcode again.
 
-You should now have a plug-in that will build. (You might need to close and re-open the project.) If you want to use [Scripting Bridge](#scripting_bridge), see the additional steps in that section.
+You should now have a plug-in that will build. If you want to use [Scripting Bridge](#scripting_bridge), see the additional steps in that section.
+
+Now might be a good time to create your Git repository and make the initial commit. The `qs_fix_project.py` script creates a default `.gitignore` for you.
 
 Many of the items in the template's `Info.plist` are named "SomethingTemplate". This prevents Quicksilver from having to process unused features. If you need to use settings in any of these sections, just rename them, removing "Template" from the end.
 
