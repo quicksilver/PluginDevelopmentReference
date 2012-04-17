@@ -185,6 +185,8 @@ Allows you to
   * Require a bundle
   * Require a minimum version of a bundle
   * Require a minimum version of Quicksilver
+  * Require a path
+  * Obsolete other plug-ins (pending)
 
 <!-- TODO there's a lot more in the plist -->
 
