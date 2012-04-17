@@ -848,7 +848,8 @@ A lot can be figured out by looking through `QSObject.m`. If you really want to 
 This is a rough outline of what you need to do to add a preference pane for your plug-in.
 
   * add a new user interface file with a single window
-  * uncheck Visible At Launch
+  * uncheck Use Auto Layout in the File inspector
+  * uncheck Visible At Launch in the Attributes inspector
   * add a class to your project such as `QSBlahPrefPane` that inherits from `QSPreferencePane`
   * set File's Owner to be `QSBlahPrefPane` (this might not matter)
   * add stuff to the plist
@@ -857,6 +858,7 @@ This is a rough outline of what you need to do to add a preference pane for your
 ## Object Source Preferences ##
 
   * add a new user interface file with a single view
+  * uncheck Use Auto Layout in the File inspector
   * set File's Owner to `QSBlahSource`
   * bind File's Owner `settingsView` to the new view
   * create controls and bind them to outlets/actions in File's Owner
