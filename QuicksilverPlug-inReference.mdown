@@ -954,7 +954,7 @@ When defining actions on the other hand, it's generally OK to blindly interact w
 
 I won't try to repeat what's in the [official documentation][sbdoc], but you should look it over. It's not very long. In particular, see the sections on Using Element Arrays and improving performance. The general rule is: Minimize the number of Apple Events.
 
-Having said that, there are exceptions I've run across, so you might have to get creative. For instance, filtering all tracks in iTunes by artist takes around a 10th of a second, while filtering by albumArtist takes nearly 5 minutes. Requesting the value of albumArtist for all tracks (with `valueForKey`) is lighting fast. So it's faster in this case to get all the albumArtist values and manually iterate doing string comparisons, even if you have to generate an Apple Event for each track later on to get more detail.
+Having said that, there are exceptions I've run across, so you might have to get creative.
 
 ### Weirdness ###
 
