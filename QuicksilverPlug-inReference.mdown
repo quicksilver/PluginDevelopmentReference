@@ -6,6 +6,12 @@ A haphazard reference by Rob McBroom <qsplugins@skurfer.com> with contributions 
   * Patrick Robertson
   * Etienne Samson
 
+<!--
+TODO remove unneeded thngs from template
+TODO QSBundleChildHandlers in the template is wrong
+
+-->
+
 ## Intro ##
 
 I wanted to write a plug-in. I found a bit of documentation on adding Actions, but that was about it. The rest was trial and error and stabbing in the dark (with some help from looking at existing plug-ins). I hope to spare others some of this frustration by documenting what I discovered. This is mainly a collection of random notes, rather than a step-by-step guide.
@@ -82,16 +88,13 @@ hidden (boolean)
 : This is generally only used by internal plug-ins bundled with Quicksilver. It's a boolean that tells whether or not your plug-in should show up on the list in the preferences.
 
 relatedBundles (array)
-: This is a list of bundle IDs for applications or plug-ins that are related
+: This is a list of bundle IDs for applications or plug-ins that are related. If a related bundle is present on the system, the plug-in will be listed in the "Recommended" section of the preferences.
 
 requiresBundle (array)
 : This is a list of bundle IDs for things that are required. Quicksilver won't load the plug-in if these things aren't on the system. For example, the Cyberduck plug-in is no use unless Cyberduck is installed, so it lists `ch.sudo.cyberduck` here.
 
 webIcon (string)
 : You can provide a URL that points to an image here.
-
-infoFile (string)
-: If you want to include a README (text or RTF) with your plug-in, you can specify the file name. I don't think this is accessible through Quicksilver's interface yet though.
 
 ### QSActions ###
 
@@ -166,11 +169,28 @@ These are actions that only appear when a specific application is in the first p
 
 #### QSProxies ####
 
-This defines proxy objects provided by the plug-in.
+This defines proxy objects provided by the plug-in. Example:
+
+    <key>QSProxies</key>
+    <dict>
+      <key>QSBlahProxyObject</key>
+      <dict>
+        <key>icon</key>
+        <string>GenericDocument</string>
+        <key>name</key>
+        <string>Current Blah Thing</string>
+        <key>providerClass</key>
+        <string>QSBlahSource</string>
+        <key>types</key>
+        <array>
+          <string>NSStringPboardType</string>
+        </array>
+      </dict>
+    </dict>
 
 ### QSPresetAdditions ###
 
-This section defines catalog entries that should be added by default under Modules in the Catalog preferences.
+This section defines catalog entries that should be added by default under Modules in the Catalog preferences. This can be a single item, or a group with individual sources as children. Each object source has different options, so see the existing plug-ins for examples.
 
 ### QSTriggerAdditions ###
 
@@ -178,15 +198,102 @@ This section defines triggers that should be added by default in the Triggers pr
 
 ### QSRequirements ###
 
-<!-- TODO give examples -->
+version (string)
+: The minimum version (build number) of Quicksilver required by this plug-in.
 
-Allows you to
+plugins (array)
+: A list of dictionaries describing other plug-ins required by this one. For exmaple:
 
-  * Require a bundle
-  * Require a minimum version of a bundle
-  * Require a minimum version of Quicksilver
-  * Require a path
-  * Obsolete other plug-ins (pending)
+        <key>plugins</key>
+        <array>
+          <dict>
+            <key>id</key>
+            <string>com.blacktree.Quicksilver.QSChatSupport</string>
+            <key>name</key>
+            <string>Chat Support</string>
+          </dict>
+        </array>
+
+  These plug-ins will be installed automatically to support your plug-in.
+
+bundles (array)
+: A more general list of things that must be installed before this plug-in will load. You can also require a minumum version of the bundle. For example:
+
+        <key>bundles</key>
+        <array>
+          <dict>
+            <key>id</key>
+            <string>ch.sudo.cyberduck</string>
+            <key>name</key>
+            <string>Cyberduck</string>
+            <key>version</key>
+            <string>3.8</string>
+          </dict>
+        </array>
+
+paths (array)
+: A list of strings defining files or folders that must exist for this plug-in to load.
+
+frameworks (array)
+: Require specific frameworks and versions. For example:
+
+        <key>frameworks</key>
+        <array>
+          <dict>
+            <key>id</key>
+            <string>com.skype.skypeframework</string>
+            <key>name</key>
+            <string>Skype Framework</string>
+            <key>resource</key>
+            <dict>
+              <key>bundle</key>
+              <string>com.skype.skype</string>
+              <key>path</key>
+              <string>/Contents/Frameworks/Skype.framework</string>
+            </dict>
+            <key>version</key>
+            <string>0.1</string>
+          </dict>
+        </array>
+
+obsoletes (array)
+: An array of bundle identifiers (strings) for plug-ins that are made obsolete by this one. For example:
+
+        <key>obsoletes</key>
+        <array>
+          <string>com.blacktree.Quicksilver.QSAirPortPlugIn</string>
+          <string>com.blacktree.Quicksilver.QSNetworkLocationPlugIn</string>
+        </array>
+
+  The update system will alert users with the obsolete plug-ins that your plug-in is available (and what it replaces). You could also use the `obsoletes` key to change the bundle identifier for an existing plug-in, but care should be taken in using it for this purpose.
+  
+  To use the `obsoletes` key, you should also require Quicksilver version 3926 or higher.
+
+### QSResourceAdditions ###
+
+You can define short names here to use with `QSResourceManager`. This is most useful to refer to icons buried inside a bundle somewhere (including your own plug-in's bundle). For example:
+
+    <key>QSResourceAdditions</key>
+    <dict>
+      <key>MailMailbox</key>
+      <dict>
+        <key>bundle</key>
+        <string>com.apple.mail</string>
+        <key>resource</key>
+        <string>mbox.icns</string>
+      </dict>
+      <key>QSBlahImage</key>
+      <dict>
+        <key>bundle</key>
+        <string>com.qsapp.QSBlah</string>
+        <key>resource</key>
+        <string>SomeImage.png</string>
+      </dict>
+    </dict>
+
+The key for a resource defined here can be used as the value for any `icon` in the plist, and it can be used in code:
+
+    [object setIcon:[QSResourceManager imageNamed:@"QSBlahImage"]];
 
 <!-- TODO there's a lot more in the plist -->
 
