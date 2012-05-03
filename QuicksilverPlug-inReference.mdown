@@ -5,6 +5,7 @@ A haphazard reference by Rob McBroom <qsplugins@skurfer.com> with contributions 
   * Henning Jungkurth
   * Patrick Robertson
   * Etienne Samson
+  * Ankur Kothari
 
 <!--
 TODO remove unneeded thngs from template
@@ -1195,11 +1196,5 @@ Some things that helped me.
 [The Existing Plug-ins](http://github.com/quicksilver/Plugins) - Loads and loads of undocumented, uncommented examples that you may or may not be able to make sense of.
 
 [The Remote Hosts Module](http://github.com/skurfer/RemoteHosts) - Not to plug my own work, but it's the only frakking plug-in I've seen with a single frakking comment to explain what's going on, so it might be worth a look.
-
-Ankur Kothari's nice tutorial - This really helps get you started, but doesn't document anything other than creating basic actions.
-
-  * [Creating a plug-in](http://lipidity.com/apple/quicksilver-plugins-in-objective-c)
-  * [Info.plist](http://lipidity.com/apple/anatomy-of-a-plugin-infoplist-part-1)
-  * [Actions](http://lipidity.com/apple/anatomy-of-a-plugin-part-2)
 
 [Some information on setting up a project for Scripting Bridge](http://robnapier.net/blog/scripting-bridge-265)
