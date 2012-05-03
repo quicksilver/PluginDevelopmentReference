@@ -299,11 +299,51 @@ The key for a resource defined here can be used as the value for any `icon` in t
 
 ## Actions ##
 
-The information in Ankur's tutorial is pretty good, but there are some things it doesn't mention.
+### Overview ###
 
-<!--
-TODO replicate all of the information in the tutorial here so it's in one place
--->
+To add an action, there are two basic steps:
+
+  1. Define the action in `Info.plist`
+  2. Write the action's code
+
+You'll define your actions in the [`QSActions` section](#qsactions) of the property list.
+
+    <key>QSActions</key>
+    <dict>
+        <key>someExmapleAction</key>
+        <dict>
+            <key>actionClass</key>
+            <string>QSBlahActionProvider</string>
+            <key>actionSelector</key>
+            <string>performActionOnObject:</string>
+            <key>directTypes</key>
+            <array>
+                <string>QSBlahType</string>
+            </array>
+            <key>name</key>
+            <string>Blah Example Action</string>
+        </dict>
+    </dict>
+
+That's the bare minimum. There are several additional keys described in the [Property List Overview](#property_list_overview).
+
+For the code, you'll have something like this:
+
+    - (QSObject *)performActionOnObject:(QSObject *)dObject
+    {
+        NSLog(@"I'm doing something with %@", [dObject stringValue]);
+        return nil;
+    }
+
+An action that expects and object in the third pane will have an `actionSelector` like `performActionOnObject:withObject:` and the code will look more like this:
+
+    - (QSObject *)performActionOnObject:(QSObject *)dObject withObject:(QSObject *)iObject
+    {
+        NSLog(@"Sending %@ to %@", [dObject stringValue], [iObject stringValue]);
+        return nil;
+    }
+
+An action should **always** be defined to return a `QSObject`, even if it never needs to return anything. A `(void)` action will crash Quicksilver. Actions aren't typically defined in your action provider's header file, but they can be if it makes you more comfortable.
 
 ### Direct and Indirect Objects ###
 
@@ -337,10 +377,11 @@ or
 
     [search terms] → Find With… → Search Engine
 
-Reverse actions are added to the plist just like any other action. They should be more or less identical to the "forward" version of the action, with two key changes:
+Reverse actions are added to the plist just like any other action. They should be more or less identical to the "forward" version of the action, with a couple of key changes:
 
-  1. The name of the action should be different.
-  2. There should be a boolean called `reverseArguments` set to TRUE
+  1. The ID (key) of the action should be different.
+  2. The name of the action should be different.
+  3. There should be a boolean called `reverseArguments` set to `YES`
 
 ### The Comma Trick ###
 
