@@ -1189,12 +1189,14 @@ This sounds quite complicated, but once you have set it up correctly, debugging 
 
 ## Links ##
 
-Some things that helped me.
+Some things that might help.
 
-[Official Docs](http://docs.blacktree.com/quicksilver/development/development) - Almost worth your time. Almost.
+[Developer Information from QSApp.com](http://qsapp.com/wiki/Developer_Information) - From the official wiki.
 
-[The Existing Plug-ins](http://github.com/quicksilver/Plugins) - Loads and loads of undocumented, uncommented examples that you may or may not be able to make sense of.
+[The Existing Plug-ins](http://github.com/quicksilver) - Loads and loads of undocumented, uncommented examples that you may or may not be able to make sense of.
 
-[The Remote Hosts Module](http://github.com/skurfer/RemoteHosts) - Not to plug my own work, but it's the only frakking plug-in I've seen with a single frakking comment to explain what's going on, so it might be worth a look.
+[The Remote Hosts Module](https://github.com/quicksilver/RemoteHosts-qsplugin) - Not to plug my own work, but it's the only frakking plug-in I've seen with a single frakking comment to explain what's going on, so it might be worth a look.
+
+[The iTunes Plug-in](https://github.com/quicksilver/iTunes-qsplugin) - Almost everything that's possible (and a couple of things that aren't) are done by this plug-in, so it's a good reference.
 
 [Some information on setting up a project for Scripting Bridge](http://robnapier.net/blog/scripting-bridge-265)
