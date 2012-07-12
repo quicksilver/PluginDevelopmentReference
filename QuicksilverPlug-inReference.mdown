@@ -91,9 +91,6 @@ hidden (boolean)
 relatedBundles (array)
 : This is a list of bundle IDs for applications or plug-ins that are related. If a related bundle is present on the system, the plug-in will be listed in the "Recommended" section of the preferences.
 
-requiresBundle (array)
-: This is a list of bundle IDs for things that are required. Quicksilver won't load the plug-in if these things aren't on the system. For example, the Cyberduck plug-in is no use unless Cyberduck is installed, so it lists `ch.sudo.cyberduck` here.
-
 webIcon (string)
 : You can provide a URL that points to an image here.
 
@@ -1005,6 +1002,7 @@ This is a rough outline of what you need to do to add a preference pane for your
   * set File's Owner to be `QSBlahPrefPane` (this might not matter)
   * add stuff to the plist
   * add your controls to the window and bind them to the right preferences
+  <!-- TODO document plist additions -->
 
 ## Object Source Preferences ##
 
