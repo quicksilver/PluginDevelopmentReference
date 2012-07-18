@@ -50,6 +50,16 @@
 			<array>
 				<dict>
 					<key>Class</key>
+					<string>ShellScript</string>
+					<key>ShellPath</key>
+					<string>/bin/sh</string>
+					<key>ShellScript</key>
+					<string>&quot;$QS_BUILD_ROOT/Tools/bltrversion&quot;</string>
+					<key>RunOnlyForDeploymentPostprocessing</key>
+					<true/>
+				</dict>
+				<dict>
+					<key>Class</key>
 					<string>Sources</string>
 				</dict>
 				<dict>
@@ -59,16 +69,6 @@
 				<dict>
 					<key>Class</key>
 					<string>Resources</string>
-				</dict>
-				<dict>
-					<key>Class</key>
-					<string>ShellScript</string>
-					<key>ShellPath</key>
-					<string>/bin/sh</string>
-					<key>ShellScript</key>
-					<string>&quot;$SRCROOT/___PACKAGENAME___/bltrversion&quot; &quot;$INFOPLIST_FILE&quot;</string>
-					<key>RunOnlyForDeploymentPostprocessing</key>
-					<true/>
 				</dict>
 			</array>
 			<key>Frameworks</key>
@@ -83,9 +83,9 @@
 			<key>BasedOn</key>
 			<dict>
 				<key>Debug</key>
-				<string>Configuration/QSPlugIn_Debug.xcconfig</string>
+				<string>Configuration/QSPlugIn.xcconfig</string>
 				<key>Release</key>
-				<string>Configuration/QSPlugIn_Release.xcconfig</string>
+				<string>Configuration/QSPlugIn.xcconfig</string>
 			</dict>
 		</dict>
 	</array>
@@ -238,7 +238,6 @@
 	<array>
 		<string>___PACKAGENAME___-Info.plist:qsplugin</string>
 		<string>Configuration</string>
-		<string>bltrversion</string>
 		<string>qs_fix_project.py</string>
 	</array>
 	<key>Definitions</key>
@@ -489,13 +488,6 @@
 	&lt;/array&gt;
 &lt;/dict&gt;
 </string>
-		<key>bltrversion</key>
-		<dict>
-			<key>Path</key>
-			<string>bltrversion</string>
-			<key>TargetIndices</key>
-			<array/>
-		</dict>
 		<key>qs_fix_project.py</key>
 		<dict>
 			<key>Path</key>
@@ -506,7 +498,7 @@
 		<key>Configuration</key>
 		<dict>
 			<key>Path</key>
-			<string>/tmp/QS/Configuration</string>
+			<string>/private/tmp/QS/Configuration</string>
 			<key>PathType</key>
 			<string>Absolute</string>
 		</dict>

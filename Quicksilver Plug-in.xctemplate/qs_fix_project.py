@@ -79,6 +79,7 @@ release_proj = False
 release_targ = False
 new_contents = []
 cleaning = False
+make_next_absolute = False
 for line in open(target_file):
     ## are we in the middle of cleaning something?
     if cleaning:
@@ -89,7 +90,7 @@ for line in open(target_file):
             ## remove lines except for Product Name
             continue
     ## remove references to scripts
-    if '/* bltrversion */' in line or 'qs_fix_project.py' in line:
+    if 'qs_fix_project.py' in line:
         continue
     ## are we about to need an xcconfig file?
     if rproj in line:
@@ -118,17 +119,21 @@ for line in open(target_file):
         new_contents.append('\t\t\tbaseConfigurationReference = %s;\n' % xc)
     else:
         ## make the last xcconfig file refer to the file and not the parent folder
-        if 'lastKnownFileType = folder; name = Release.xcconfig; path = /tmp/QS/Configuration' in line:
+        if 'lastKnownFileType = folder; name = Release.xcconfig; path = /private/tmp/QS/Configuration' in line:
             line = line.replace('folder', 'text.xcconfig')
-            line = line.replace('/tmp/QS/Configuration', 'Release.xcconfig')
+            line = line.replace('/private/tmp/QS/Configuration', 'Release.xcconfig')
             line = line.replace('<absolute>', '<group>')
             line = line.replace('name = Release.xcconfig; ', '')
         ## don't add Release.xcconfig to the target
         if line.endswith('/* Release.xcconfig in Resources */,\n'):
             continue
         ## make the absolute path actually absolute
+        if make_next_absolute:
+            make_next_absolute = False
+            line = line.replace('<group>', '<absolute>')
         if conf.match(line):
-            line = re.sub(r' = .*private', ' = ', line)
+            line = re.sub(r' = .*private', ' = /private', line)
+            make_next_absolute = True
     ## store xcconfig identifiers for later
     m = pconf.match(line)
     if m:
