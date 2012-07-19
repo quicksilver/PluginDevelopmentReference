@@ -1173,6 +1173,30 @@ To be able to debug plugins using an actual debugger instead of just `NSLog()` s
 
 Note that even with no breakpoints set, the debugger will take you into your plug-in's code if any exceptions are encountered. This sounds quite complicated, but once you have set it up correctly, debugging is pretty straight forward: Build plugin, install plugin, debug Quicksilver.
 
+## Plug-in Clean-up and Modernization ##
+
+There are a few things we've been doing to every plug-in we update. If you're working on an existing plug-in, please go through this check list and make sure it's in good shape.
+
+  1. Make sure the project is corectly set up to use Quicksilver's `.xcconfig` files
+      * Look at the `Configuration` folder in the File Inspector. Make sure it's set as an "Absolute Path" and that the path is `/private/tmp/QS/Configuration` (The "full path" won't include `/private` and that's fine.)
+      * Under the `Configuration` folder, remove references to `QSPlugIn_Release.xcconfig` and `QSPlugIn_Debug.xcconfig` (if they exist). They're not necessary with Xcode 4.
+      * Select the project in the Project Navigator then go to the project's "Info" tab. Under Configurations, you should see "Debug" and "Release". The project under each should be based on "Debug" or "Release" respectively, and the target under each should be based on "QSPlugIn".
+      * Go through the build settings for both the project and the target. As a general rule, nothing should be in bold except "Product Name". Select anything that's bold and hit Delete.
+  2. Make sure `bltrversion` runs first
+      * Go to the target's "Build Phases" tab.
+      * Drag the "Run Script" phase for `bltrversion` as high as you can (it should be 2nd on the list).
+      * Change the content of the script to `"$QS_BUILD_ROOT/Tools/bltrversion"`
+      * Update the name from "Run Script" to something useful, like "Update Version and Documentation"
+  3. Remove redundant `#import` statements. Most of the headers the plug-ins depend on are taken care of by `Quicksilver.pch`. Go through all of the project's files and remove any references to headers from the OS or from Quicksilver. This isn't a complete list, but some common ones are `Cocoa.h`, `Carbon.h`, `Foundation.h`, `QSCore.h`, `QSPlugIn.h`, `QSActionProvider.h`, and `QSObjectSource.h`.
+  4. Remove any unused files from the plug-in's Git repository and from the Xcode project. If the code is still inside a `trunk` folder, move it up a level and get rid of `trunk`.
+  5. Update the `Info.plist`
+      * Add "Bundle versions string, short" and set it to something like 1.0.0
+      * Add "Bundle display name". This name will have the type (Quicksilver Plugin) appended to it, so it shouldn't necessarily match the Bundle name. For example, if the display name is "Blah Plugin", it will how up as "Blah Plugin Quicksilver Plugin", so keep it simple.
+      * Remove unused or obsolete keys (QSPlugIn → qsversion, QSRequirements → level)
+  6. Look for any references to "module" or "plug-in" and change them to "plugin". Even though "plug-in" is correct, the community has elected to go another way, so keep it consistent.
+  7. Update the code for 64-bit. The specifics are well documented elsewhere, so I'm not going to cover it here.
+  8. Last but not least, **make sure the plug-in has adequate documentation** for end-users.
+
 ## Links ##
 
 Some things that might help.
