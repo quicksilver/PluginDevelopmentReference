@@ -102,6 +102,9 @@ hidden (boolean)
 relatedBundles (array)
 : This is a list of bundle IDs for applications or plug-ins that are related. If a related bundle is present on the system, the plug-in will be listed in the "Recommended" section of the preferences.
 
+relatedPaths (array)
+: This is a list of paths for files or folders that might be related to your plug-in. This is useful for plug-ins based on some command-line tool(s) with no associated bundle. The path can be absolute, or use things like `~` to refer to the user's home directory. If a related file or folder is present on the system, the plug-in will be listed in the "Recommended" section of the preferences.
+
 webIcon (string)
 : You can provide a URL that points to an image here.
 
@@ -1202,7 +1205,7 @@ There are a few things we've been doing to every plug-in we update. If you're wo
   4. Remove any unused files from the plug-in's Git repository and from the Xcode project. If the code is still inside a `trunk` folder, move it up a level and get rid of `trunk`.
   5. Update the `Info.plist`
       * Add "Bundle versions string, short" and set it to something like 1.0.0
-      * Add "Bundle display name". This name will have the type (Quicksilver Plugin) appended to it, so it shouldn't necessarily match the Bundle name. For example, if the display name is "Blah Plugin", it will how up as "Blah Plugin Quicksilver Plugin", so keep it simple.
+      * Add "Bundle display name". This name will have the type (Quicksilver Plugin) appended to it, so it shouldn't necessarily match the Bundle name. For example, if the display name is "Blah Plugin", it will show up as "Blah Plugin Quicksilver Plugin", so keep it simple.
       * Remove unused or obsolete keys (QSPlugIn → qsversion, QSRequirements → level)
   6. Look for any references to "module" or "plug-in" and change them to "plugin". Even though "plug-in" is correct, the community has elected to go another way, so keep it consistent.
   7. Update the code for 64-bit. The specifics are well documented elsewhere, so I'm not going to cover it here.
