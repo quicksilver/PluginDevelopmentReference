@@ -8,9 +8,8 @@ A haphazard reference by Rob McBroom <qsplugins@skurfer.com> with contributions 
   * Ankur Kothari
 
 <!--
-TODO remove unneeded thngs from template
+TODO remove unneeded things from template
 TODO QSBundleChildHandlers in the template is wrong
-
 -->
 
 ## Intro ##
@@ -1198,9 +1197,21 @@ If you're trying to work on one of the existing plug-ins and you can't get it to
   3. In the File Inspector, make sure the paths are correct. (They will sometimes be pointing to a previous developer's home directory.)
   4. Tell Xcode to do a "Release" build of the plug-in instead of "Debug". (I'm not sure what all the ramifications are with this, but it seems to work.)
 
-### Debugging Plugins ###
+### Debugging Plug-ins ###
 
 To be able to debug plugins using an actual debugger instead of just `NSLog()` statements, there are a few steps that need to be done. Some of these steps are already described in the **Getting Started** section in the beginning of this guide, just check again to make sure everything is set up correctly.
+
+#### From the Plug-in ####
+
+  1. Build Quicksilver using the Debug configuration
+  2. Go to Product → Edit Scheme… (⌘<)
+  3. Select the project's Debug configuration
+  4. Set the executable to `/tmp/QS/build/Debug/Quicksilver.app`
+  5. Remove the plug-in from `~/Library/Application Support/Quicksilver/PlugIns` (if installed)
+
+Now, as long as you're using the Debug configuration, you should be able to set breakpoints inside the plug-in code itself.
+
+#### From Quicksilver ####
 
   1. Build Quicksilver using the Debug configuration
   2. Build your plug-in using the Debug configuration
@@ -1217,7 +1228,7 @@ Note that even with no breakpoints set, the debugger will take you into your plu
 
 There are a few things we've been doing to every plug-in we update. If you're working on an existing plug-in, please go through this check list and make sure it's in good shape.
 
-  1. Make sure the project is corectly set up to use Quicksilver's `.xcconfig` files
+  1. Make sure the project is correctly set up to use Quicksilver's `.xcconfig` files
       * Look at the `Configuration` folder in the File Inspector. Make sure it's set as an "Absolute Path" and that the path is `/private/tmp/QS/Configuration` (The "full path" won't include `/private` and that's fine.)
       * Under the `Configuration` folder, remove references to `QSPlugIn_Release.xcconfig` and `QSPlugIn_Debug.xcconfig` (if they exist). They're not necessary with Xcode 4.
       * Select the project in the Project Navigator then go to the project's "Info" tab. Under Configurations, you should see "Debug" and "Release". The project under each should be based on "Debug" or "Release" respectively, and the target under each should be based on "QSPlugIn".
