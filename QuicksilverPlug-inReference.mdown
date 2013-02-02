@@ -199,6 +199,10 @@ This defines proxy objects provided by the plug-in. Example:
       </dict>
     </dict>
 
+<!--
+TODO document proxy object methods - resolve, types, details, how to set icons, etc.
+-->
+
 ### QSPresetAdditions ###
 
 This section defines catalog entries that should be added by default under Modules in the Catalog preferences. This can be a single item, or a group with individual sources as children. Each object source has different options, so see the existing plug-ins for examples.
@@ -317,6 +321,7 @@ The key for a resource defined here can be used as the value for any `icon` in t
 
     [object setIcon:[QSResourceManager imageNamed:@"QSBlahImage"]];
 
+<!-- TODO document adding custom Event Triggers -->
 <!-- TODO there's a lot more in the plist -->
 
 ## Actions ##
