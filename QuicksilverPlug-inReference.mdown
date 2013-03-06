@@ -359,6 +359,7 @@ For the code, you'll have something like this:
     - (QSObject *)performActionOnObject:(QSObject *)dObject
     {
         NSLog(@"I'm doing something with %@", [dObject stringValue]);
+        id theMeat = [dObject objectForType:QSBlahType];
         return nil;
     }
 
@@ -877,9 +878,9 @@ If you set multiple types, you should also set one as primary.
 
     [myObject setPrimaryType:QSBlahType];
 
-I don't think you can use `setPrimaryType:` alone. You must also call `setObject:forType:` using the same type at some point.
+Don't use `setPrimaryType:` alone. You must also call `setObject:forType:` using the same type at some point.
 
-Here are all the types Quicksilver declares in `QSTypes.h`. I don't know what might be special about each one, but examples of their creation and use are probably available in existing code.
+Here are all the types Quicksilver declares in `QSTypes.h`. Examples of their creation and use are available in existing code.
 
     QSFilePathType
     QSTextType
@@ -901,6 +902,8 @@ Here are all the types Quicksilver declares in `QSTypes.h`. I don't know what mi
     QSPasteboardDataType
     QSCommandType
     QSHandledType
+
+A warning about arrays: As of Quicksilver build 4000, if you call `[object setObject:someArray forType:QSBlahType]` then call `[object objectForType:QSBlahType]`, you will not get the original array back. This will hopefully be addressed one day, but in the meantime, if you need to store an array untouched, store it in the cache or as metadata.
 
 #### Label ####
 
