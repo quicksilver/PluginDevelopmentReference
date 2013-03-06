@@ -771,9 +771,11 @@ If you used `loadChildrenForObject:` so the user can right arrow into an object,
 
 Example: `- (BOOL)isVisibleSource`
 
-This method determines whether or not your source shows up on the drop-down list for adding new custom catalog entries. As far as I can tell, the name users see will be something ugly like "QSBlahSource". The mapping that generates pretty names seems to be embedded with Quicksilver itself.
+This method determines whether or not your source shows up on the drop-down list for adding new custom catalog entries.
 
-Return FALSE to keep this off of the drop-down. Return TRUE if you want users to be able to add custom entries of this type to their catalog. Keep in mind that you will also need to provide them with some sort of interface to do so.
+Return `NO` to keep this off of the drop-down. Return `YES` if you want users to be able to add custom entries of this type to their catalog. Keep in mind that you will also need to provide them with some sort of interface to do so.
+
+See [Object Source Preferences](#object_source_preferences) for details.
 
 ### Actions ###
 
@@ -1072,7 +1074,7 @@ This is a rough outline of what you need to do to add a preference pane for your
   * set File's Owner to `QSBlahSource`
   * bind File's Owner `settingsView` to the new view
   * create controls and bind them to outlets/actions in File's Owner
-  * add a strings file to the project called `QSObjectSource.name.strings`
+  * add a strings file to the project called `QSObjectSource.name.strings` (or set the name as the key under `QSObjectSources` if it won't be localized)
 
 You'll need to add at these methods to `QSBlahSource`.
 
