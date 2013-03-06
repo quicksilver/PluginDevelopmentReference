@@ -727,7 +727,21 @@ If you call `setIcon:` when adding objects to the catalog, they will show up at 
 
 Quicksilver calls this in real-time as objects need to be displayed, which is why it appears more reliably. (It's probably more efficient that way too, compared to storing an icon to everything in the catalog whether it gets used or not.)
 
-This method does not seem to be called for `QSObject`s created using `objectWithString:`. That method makes a call to `loadIcon:` internally, which must tell Quicksilver that it already has an icon and doesn't need to go look for one.
+As the name implies, you should only use this for icons that are ready to display quickly. Generally, that means icons or images that are already on disk or in memory. If you need to do anything more expensive, like generate a Quick Look preview, add a badge to the icon, or fetch an image over the network, do it in `loadIconForObject:`.
+
+#### loadIconForObject
+
+Example: `- (BOOL)loadIconForObject:(QSObject *)object`
+
+This method is optional. After the "quick icon" has been set with `setQuickIconForObject:`, Quicksilver will ask your object source if it has this method, and if so, run it on a background thread.
+
+This is where you should do more expensive image processing or fetching. If you end up with a valid image, you should call `setIcon:` again from here. If an icon already exists for the object, the main interface and results list will redraw the icon to reflect the change.
+
+Some examples might be helpful.
+
+  * The filesystem object source uses this method to replace the generic icon for files (based on type) with a Quick Look preview.
+  * The URL object source replaces the generic URL icon on web searches with one that has the magnifying glass and favicon from the site overlaid.
+  * The iTunes plug-in fetches album covers and video previews (via Quick Look) and uses them to replace the generic icon for those types.
 
 #### loadChildrenForObject
 
