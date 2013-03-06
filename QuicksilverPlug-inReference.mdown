@@ -868,9 +868,9 @@ To set a type for an object, do something like this:
 
     [myObject setObject:someObject forType:QSBlahType];
 
-Each `QSObject` has an array of types, so you can call this method multiple times, each with a different type, if you want. That deserves some further discussion. Most actions in Quicksilver only work with certain types. You will probably want to make built-in actions or actions defined in other plug-ins do something useful with your objects, which may be of a new type Quicksilver has never heard of. The "Paste" and "Large Type" actions are prime examples. You can't very well expect various other plug-ins (or Quicksilver itself) to add support for your new type. This is where you want to use an existing type to get things working.
+A `QSObject` can have multiple types, so you can call this method multiple times, each with a different type, if you want. That deserves some further discussion. Most actions in Quicksilver only work with certain types. You will probably want to make built-in actions or actions defined in other plug-ins do something useful with your objects, which may be of a new type Quicksilver has never heard of. The "Paste" and "Large Type" actions are prime examples. You can't very well expect various other plug-ins (or Quicksilver itself) to add support for your new type. This is where you want to use an existing type to get things working.
 
-Hopefully, by now, you've figured out what the object is supposed to be for each type you assign. It will be something that actions supporting that type can make use of. I'll use "Paste" as an example. The "Paste" action works with a few types I'm sure, but the simplest one is `QSTextType`. The thing you want to paste in that case will be a string. Your `QSObject` probably has many strings (name, label, details, etc.) so how can you tell Quicksilver which to spit out when running the "Paste" action? Like this:
+Hopefully, by now, you've figured out what the object is supposed to be for each type you assign. It will be something that actions supporting that type can make use of. (See the warning on arrays below.) I'll use "Paste" as an example. The "Paste" action works with a few types I'm sure, but the simplest one is `QSTextType`. The thing you want to paste in that case will be a string. Your `QSObject` probably has many strings (name, label, details, etc.) so how can you tell Quicksilver which to spit out when running the "Paste" action? Like this:
 
     [myObject setObject:thisString forType:QSTextType];
 
@@ -905,7 +905,7 @@ Here are all the types Quicksilver declares in `QSTypes.h`. Examples of their cr
     QSCommandType
     QSHandledType
 
-A warning about arrays: As of Quicksilver build 4000, if you call `[object setObject:someArray forType:QSBlahType]` then call `[object objectForType:QSBlahType]`, you will not get the original array back. This will hopefully be addressed one day, but in the meantime, if you need to store an array untouched, store it in the cache or as metadata.
+A warning about arrays: If you call `[object setObject:someArray forType:QSBlahType]` then call `[object objectForType:QSBlahType]`, you will only get the array's last object. To get the original array back, call `[object arrayForType:QSBlahType]` instead.
 
 #### Label ####
 
