@@ -166,6 +166,9 @@ runInMainThread (boolean)
 hidden (boolean)
 : Whether or not the action should be directly usable by the user. You might want to set this for an alternate action.
 
+resolvesProxy (boolean)
+: By default, Quicksilver resolves proxy objects and passes the resulting "real" object on to the action. This prevents actions from having to test for and resolve proxies themselves. In rare cases, you might need to pass the proxy to an action as is. If so, set this to `NO`.
+
 ### QSRegistration ###
 
 This section gives Quicksilver additional information about your plug-in.
@@ -203,9 +206,7 @@ This defines proxy objects provided by the plug-in. Example:
       </dict>
     </dict>
 
-<!--
-TODO document proxy object methods - resolve, types, details, how to set icons, etc.
--->
+Omitting the icon or setting its value to "ProxyIcon" will cause the proxy object to take on the icon of the resolved object.
 
 #### QSTriggerEvents ####
 
@@ -1057,6 +1058,42 @@ To get the same list but sort by rank (typically determined by how often a user 
 ### More Information ###
 
 A lot can be figured out by looking through `QSObject.m`. If you really want to track down *everything* `QSObject` provides, search for "@implementation QSObject" in the Quicksilver source and stare in horror at the number of results.
+
+## Proxy Objects ##
+
+The property list entry that defines a proxy object is discussed above. See [`QSProxies`](#qsproxies). The `providerClass` defined in the plist must implement at least the `resolveProxyObject:` method.
+
+This method is responsible for returning the "real" object referred to by one or more proxies. If the class is only responsible for one proxy object, it usually returns an object blindly, but if it handles more than one, it needs to see which (usually by checking the identifier) before returning a value.
+
+    - (QSObject *)resolveProxyObject:(QSProxyObject *)proxy
+    {
+        NSString *ident = [proxy identifier];
+        if ([ident isEqualToString:@"QSBlahExampleProxy"]) {
+            QSObject *resolved = nil;
+            // do work to figure out what this object currently refers to
+            return resolved;
+        }
+        return nil;
+    }
+
+There are other optional methods you can implement in the `providerClass` for proxy objects.
+
+Proxies are often requested multiple times in rapid succession, so Quicksilver tries to avoid resolving them every time. You can control the amount of time a proxy will hold onto its current value before doing the work of resolving it again. The default is 3 seconds. 0 is not recommended.
+
+    - (NSTimeInterval)cacheTimeForProxy:(id)proxy
+    {
+        return 10.0;
+    }
+
+If the types for your proxy object are known in advance, just define them in the plist. Some proxy objects may refer to different types of `QSObject`s in different contexts. (Think about "Current Selection".) The type can be set dynamically to ensure that the correct actions appear in the second pane.
+
+    - (NSArray *)typesForProxyObject:(QSProxyObject *)proxy
+    {
+        // figure out which types apply
+        // return an array of type names (strings)
+    }
+
+There are other methods you can implement to dynamically assign details, icons, etc., but these aren't specific to proxy objects.
 
 ## Preferences ##
 
