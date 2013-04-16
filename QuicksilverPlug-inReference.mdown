@@ -1211,7 +1211,7 @@ Posting the notification should look something like this:
 
 The object passed with the notification should be a string matching the key name defined in the property list.
 
-`userInfo` is optional, but if you pass anything, it should be a dictionary containing a `QSObject` for the key "object". The Event Triggers plug-in includes a proxy object called "Event Trigger Object". You can use that in an event trigger to refer to the `QSObject` included in `userInfo`. This potentially allows for powerful combinations of commands.
+`userInfo` can be `nil`, but if you pass anything, it should be a dictionary containing a `QSObject` for the key "object". The Event Triggers plug-in includes a proxy object called "Event Trigger Object". You can use that in an event trigger to refer to the `QSObject` included in `userInfo`. This potentially allows for powerful combinations of commands.
 
 ## Scripting Bridge ##
 
