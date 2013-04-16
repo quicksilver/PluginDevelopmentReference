@@ -57,6 +57,8 @@ If the plug-in project has been updated according to the [modernization section]
 
 It's processed using [Python-Markdown][pymd] with the [extra extension][mdex] enabled, so you can use the usual Markdown syntax, as well as tables, definition lists, etc.
 
+<!-- TODO mention x-man-page://command -->
+
 ### bltrversion ###
 
 This script is called every time you build your project. A short explanation of what it does and the implications is in order. Every time you build, it will:
@@ -202,6 +204,22 @@ This defines proxy objects provided by the plug-in. Example:
 <!--
 TODO document proxy object methods - resolve, types, details, how to set icons, etc.
 -->
+
+#### QSTriggerEvents ####
+
+Your plug-in can post notifications that can be used to signal an event trigger. In order to add these notifications to the Event Triggers pop-up menu, you need to define them here. `QSTriggerEvents` is a dictionary. Each key is the name of a notification. The value is another dictionary with 4 keys.
+
+name
+  : The name that will appear in the pop-up menu.
+
+type
+  : The category or group that this "event" will be under in the menu.
+
+icon
+  : The icon that will appear next to the item in the pop-up menu.
+
+provider
+  : The name of the class that posts the notification.
 
 ### QSPresetAdditions ###
 
@@ -1123,6 +1141,39 @@ To customize the name of the source in the drop-down, add something like this to
     </plist>
 
 And of course you need to make sure you update or create the catalog entry when changes are made in the interface. See `QSFileSystemObjectSource` for an example.
+
+## Event Triggers ##
+
+Any plug-in can define additional "events" to be monitored by the Event Triggers plug-in. There are a couple of reasons you might post a notification from a plug-in:
+
+  1. Your plug-in does something that takes a long time. Particularly if it does it in the background.
+  2. The result of some command might be useful in a follow-up command. (More on the Event Trigger Object later.)
+  3. Your plug-in does something atypical automatically in the background.
+
+To set this up correctly, you need an entry in `Info.plist` and some code to post the notification. A typical property list entry looks like this:
+
+    <key>QSBlahThingHappened</key>
+    <dict>
+    	<key>name</key>
+    	<string>Operation Finished</string>
+    	<key>icon</key>
+    	<string>IconName</string>
+    	<key>provider</key>
+    	<string>QSBlahSource</string>
+    	<key>type</key>
+    	<string>Blah</string>
+    </dict>
+
+See [QSTriggerEvents](#qstriggerevents) for details.
+
+Posting the notification should look something like this:
+
+    NSDictionary *info = @{@"object": someQSObject};
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"QSEventNotification" object:@"QSBlahThingHappened" userInfo:info];
+
+The object passed with the notification should be a string matching the key name defined in the property list.
+
+`userInfo` is optional, but if you pass anything, it should be a dictionary containing a `QSObject` for the key "object". The Event Triggers plug-in includes a proxy object called "Event Trigger Object". You can use that in an event trigger to refer to the `QSObject` included in `userInfo`. This potentially allows for powerful combinations of commands.
 
 ## Scripting Bridge ##
 
