@@ -66,8 +66,10 @@ This script is called every time you build your project. A short explanation of 
   1. Increment the Bundle version in `Info.plist`
   2. Convert `Documentation.mdown` to HTML and insert it into the `extendedDescription`
 
-There are a couple of things to keep in mind as a result.
+There are a couple of things to keep in mind.
 
+  * It will not change the "short" version number that the user sees. You'll need to manage that manually.
+  * The script unfortunately runs *after* the build, so if you want to update the version or documentation, you need to build, commit, then build again (and most likely revert the additional version bump that will result). This ensures that the built product matches what another developer will find in the repository.
   * Git will almost always show this file as having changed. Don't commit the change unless it's actually what you want.
   * You may have built the thing 250 times since the last commit, but do you really want the build number to jump that far when you were probably just testing some small changes? No. So either manually revert it to the last committed value, or increment it to something reasonable.
   * You can normally install an updated plug-in by double-clicking it in Finder, but it will only replace the old one if it has a higher build number. If you lowered the number recently in order to commit something more reasonable, you might have to manually remove the old version (with a higher build number) before you can install the latest.
