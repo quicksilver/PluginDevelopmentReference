@@ -1095,6 +1095,22 @@ If the types for your proxy object are known in advance, just define them in the
 
 There are other methods you can implement to dynamically assign details, icons, etc., but these aren't specific to proxy objects.
 
+### Current Selection ###
+
+If you're working on a plug-in for a specific application, you can often improve the behavior of Quicksilver's built-in "Current Selection" proxy object.
+
+When a user asks for Current Selection, Quicksilver will first see if any plug-ins claim to know how to get a selection from the front-most application (based on its bundle identifier). If not, it will simply tell the application to "Copy" and hope the pasteboard contains something useful.
+
+To claim support for a particular application, define a proxy object like any other, but use the application's bundle ID as the proxy object's identifier in the plist.
+
+Note that when Quicksilver looks up this proxy and finds the provider class, it will send `[provider resolveProxyObject:nil]`. You might want to put the selection business in a dedicated class so you don't have to worry about what value was passed in. You can just blindly return the selection in that case.
+
+If the Current Selection proxy is handled by the same class as other proxy objects, you'll need to do some testing to figure out if Current Selection is the one being requested. iTunes and iPhoto do something like this:
+
+    if (!proxy || [[proxy identifier] isEqualToString:@"com.apple.iTunes"])
+
+Why would you put other proxies in the same class with Current Selection? Because Current Selection only applies to the front-most application. Many useful triggers depend on getting the selection from a specific application, whether it's active or not, so you're probably also going to define a "Current Blah Selection" for that. You don't want to duplicate the code for getting the selection in two different classes, so you'll have to put them in the same place.
+
 ## Preferences ##
 
 This is a rough outline of what you need to do to add a preference pane for your plug-in.
