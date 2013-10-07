@@ -235,10 +235,20 @@ This section defines triggers that should be added by default in the Triggers pr
 ### QSRequirements ###
 
 version (string)
-: The minimum version (build number) of Quicksilver required by this plug-in.
+  : The minimum version (build number) of Quicksilver required by this plug-in.
+
+osRequired (string)
+  : The minimum version of OS X required to use the plug-in. Use this to prevent the plug-in from loading on an older OS. You can write the version as `10.x.x` or just `10.x`.
+
+    If you use this, you should also require Quicksilver build 4005 or higher, as older versions of Quicksilver will not respect the OS version restrictions.
+
+osUnsupported (string)
+  : The version of OS X at which this plug-in will stop working. Use this to prevent the plug-in from loading on a newer OS. You can write the version as `10.x.x` or just `10.x`.
+
+    If you use this, you should also require Quicksilver build 4005 or higher, as older versions of Quicksilver will not respect the OS version restrictions.
 
 plugins (array)
-: A list of dictionaries describing other plug-ins required by this one. For exmaple:
+  : A list of dictionaries describing other plug-ins required by this one. For exmaple:
 
         <key>plugins</key>
         <array>
@@ -250,10 +260,10 @@ plugins (array)
           </dict>
         </array>
 
-  These plug-ins will be installed automatically to support your plug-in.
+    These plug-ins will be installed automatically to support your plug-in.
 
 bundles (array)
-: A more general list of things that must be installed before this plug-in will load. You can also require a minumum version of the bundle. For example:
+  : A more general list of things that must be installed before this plug-in will load. You can also require a minumum version of the bundle. For example:
 
         <key>bundles</key>
         <array>
@@ -268,10 +278,10 @@ bundles (array)
         </array>
 
 paths (array)
-: A list of strings defining files or folders that must exist for this plug-in to load.
+  : A list of strings defining files or folders that must exist for this plug-in to load.
 
 frameworks (array)
-: Require specific frameworks and versions. For example:
+  : Require specific frameworks and versions. For example:
 
         <key>frameworks</key>
         <array>
@@ -293,7 +303,7 @@ frameworks (array)
         </array>
 
 obsoletes (array)
-: An array of bundle identifiers (strings) for plug-ins that are made obsolete by this one. For example:
+  : An array of bundle identifiers (strings) for plug-ins that are made obsolete by this one. For example:
 
         <key>obsoletes</key>
         <array>
@@ -301,9 +311,9 @@ obsoletes (array)
           <string>com.blacktree.Quicksilver.QSNetworkLocationPlugIn</string>
         </array>
 
-  The update system will alert users with the obsolete plug-ins that your plug-in is available (and what it replaces). You could also use the `obsoletes` key to change the bundle identifier for an existing plug-in, but care should be taken in using it for this purpose.
+    The update system will alert users with the obsolete plug-ins that your plug-in is available (and what it replaces). You could also use the `obsoletes` key to change the bundle identifier for an existing plug-in, but care should be taken in using it for this purpose.
   
-  To use the `obsoletes` key, you should also require Quicksilver version 3926 or higher.
+    To use the `obsoletes` key, you should also require Quicksilver version 3926 or higher.
 
 ### QSResourceAdditions ###
 
