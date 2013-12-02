@@ -1065,6 +1065,20 @@ To get the same list but sort by rank (typically determined by how often a user 
 
     NSArray *objects = [QSLib scoredArrayForType:@"QSBlahType"];
 
+#### Respecting Disabled Objects ####
+
+Users have the ability to remove individual objects from the catalog by unchecking them in the source entry's preferences. When providing a list of children or objects in the third pane, it's generally appropriate to respect these disabled objects and prevent them from appearing.
+
+If you pull existing objects from the catalog by type as described above, the objects should already be omitted in build 4008 or later. If you're using an older build, getting a list by calling `objectForEntry:`, or generating objects on-the-fly somehow, you'll need to omit these items from the results yourself.
+
+Here's one possible way to do it:
+
+    // unfilteredResults is the array you start from
+    NSIndexSet *enabled = [unfilteredResults indexesOfObjectsWithOptions:NSEnumerationConcurrent passingTest:^BOOL(QSObject *obj, NSUInteger idx, BOOL *stop) {
+        return ![QSLib itemIsOmitted:obj];
+    }];
+    NSArray *filteredResults = [unfilteredResults objectsAtIndexes:enabled];
+
 ### More Information ###
 
 A lot can be figured out by looking through `QSObject.m`. If you really want to track down *everything* `QSObject` provides, search for "@implementation QSObject" in the Quicksilver source and stare in horror at the number of results.
