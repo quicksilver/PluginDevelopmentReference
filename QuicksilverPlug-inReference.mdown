@@ -1063,7 +1063,7 @@ To simply get everything of a certain type, call this:
 
 To get the same list but sort by rank (typically determined by how often a user accesses the object):
 
-    NSArray *objects = [QSLib scoredArrayForString:nil inSet:[QSLib arrayForType:@"QSBlahType"]];
+    NSArray *objects = [QSLib scoredArrayForType:@"QSBlahType"];
 
 ### More Information ###
 
