@@ -495,7 +495,7 @@ Example: `- (NSArray *)validIndirectObjectsForAction:(NSString *)action directOb
 
 This method gets called when going to the third pane (for actions that provide one). It should return an array of `QSObject`s that are valid for that action. For instance, selecting a file and choosing the "Move To…" action will only show folders in the third pane.
 
-Personally, I use it to make sure the third pane comes up in text entry mode instead of regular "search" mode. To accomplish that, do something like this:
+To make sure the third pane comes up in text entry mode instead of regular "search" mode, do something like this:
 
     return [NSArray arrayWithObject:[QSObject textProxyObjectWithDefaultValue:@""]];
 
@@ -503,10 +503,13 @@ You can set the default text to whatever and that text will appear (selected) in
 
 If the third pane will ask for some sort of search text, you should stick to the convention of other plug-ins (and Mac OS X in general) and set the default text to be whatever the user last searched for. To accomplish that:
 
-    NSString *searchString=[[NSPasteboard pasteboardWithName:NSFindPboard] stringForType:NSStringPboardType];
+    NSString *searchString = [[NSPasteboard pasteboardWithName:NSFindPboard] stringForType:NSStringPboardType];
     return [NSArray arrayWithObject:[QSObject textProxyObjectWithDefaultValue:searchString]];
 
-This method doesn't seem to be affected by `validatesObjects` in the plist.
+When you return a simple array, the first object will be selected by default. To select a specific object, return a two element array. The first element should be the object you want selected. The second element should be the entire list of possible objects. For example:
+
+    QSObject *selectedThing = [indirectObjects objectAtIndex:4];
+    return @[selectedThing, indirectObjects];
 
 ### AppleScript Actions ###
 
