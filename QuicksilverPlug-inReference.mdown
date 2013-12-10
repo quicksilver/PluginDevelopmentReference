@@ -1144,6 +1144,7 @@ This is a rough outline of what you need to do to add a preference pane for your
 
   * add a new user interface file with a single window
   * uncheck Visible At Launch in the Attributes inspector
+  * uncheck Release When Closed in the Attributes inspector
   * add a class to your project such as `QSBlahPrefPane` that inherits from `QSPreferencePane`
   * set File's Owner to be `QSBlahPrefPane`
   * connect the window to `_window` on File's Owner
