@@ -234,8 +234,11 @@ This section defines triggers that should be added by default in the Triggers pr
 
 ### QSRequirements ###
 
-version (string)
+version or minSystemVersion (string)
   : The minimum version (build number) of Quicksilver required by this plug-in.
+
+maxSystemVersion (string)
+  : The maximum version (build number) of Quicksilver this plug-in will work with.
 
 osRequired (string)
   : The minimum version of OS X required to use the plug-in. Use this to prevent the plug-in from loading on an older OS. You can write the version as `10.x.x` or just `10.x`.
