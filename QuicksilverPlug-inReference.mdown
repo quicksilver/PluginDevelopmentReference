@@ -210,10 +210,12 @@ Omitting the icon or setting its value to "ProxyIcon" will cause the proxy objec
 
 #### QSTriggerEvents ####
 
-Your plug-in can post notifications that can be used to signal an event trigger. In order to add these notifications to the Event Triggers pop-up menu, you need to define them here. `QSTriggerEvents` is a dictionary. Each key is the name of a notification. The value is another dictionary with 4 keys.
+Your plug-in can post notifications that can be used to signal an event trigger. In order to add these notifications to the Event Triggers pop-up menu, you need to define them here. `QSTriggerEvents` is a dictionary. Each key is the name of a notification. The value is another dictionary with these keys:
 
 name
   : The name that will appear in the pop-up menu.
+    
+    For events generated exclusively by Quicksilver, you should add `☿` after the name. For example, the "File Tagged" event will not be detected when files are tagged in Finder; only when the tags are modified by a Quicksilver action. So the name is shown as "File Tagged ☿".
 
 type
   : The category or group that this "event" will be under in the menu.
@@ -223,6 +225,9 @@ icon
 
 provider
   : The name of the class that posts the notification.
+
+allowMatching
+  : Whether or not the match/ignore controls for triggers using this event should be enabled. If you plan on passing something specific as the Event Trigger Object, this should probably be `YES`.
 
 ### QSPresetAdditions ###
 
@@ -1233,14 +1238,14 @@ Any plug-in can define additional "events" to be monitored by the Event Triggers
 
   1. Your plug-in does something that takes a long time. Particularly if it does it in the background.
   2. The result of some command might be useful in a follow-up command. (More on the Event Trigger Object later.)
-  3. Your plug-in does something atypical automatically in the background.
+  3. Your plug-in does something atypical *automatically* in the background.
 
 To set this up correctly, you need an entry in `Info.plist` and some code to post the notification. A typical property list entry looks like this:
 
     <key>QSBlahThingHappened</key>
     <dict>
     	<key>name</key>
-    	<string>Operation Finished</string>
+    	<string>Operation Finished ☿</string>
     	<key>icon</key>
     	<string>IconName</string>
     	<key>provider</key>
@@ -1259,6 +1264,8 @@ Posting the notification should look something like this:
 The object passed with the notification should be a string matching the key name defined in the property list.
 
 `userInfo` can be `nil`, but if you pass anything, it should be a dictionary containing a `QSObject` for the key "object". The Event Triggers plug-in includes a proxy object called "Event Trigger Object". You can use that in an event trigger to refer to the `QSObject` included in `userInfo`. This potentially allows for powerful combinations of commands.
+
+If you don't pass anything, the Event Trigger Object will just be a string object based on the event's name.
 
 ## Scripting Bridge ##
 
