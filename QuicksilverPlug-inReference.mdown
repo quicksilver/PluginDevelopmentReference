@@ -251,7 +251,7 @@ osUnsupported (string)
     If you use this, you should also require Quicksilver build 4005 or higher, as older versions of Quicksilver will not respect the OS version restrictions.
 
 plugins (array)
-  : A list of dictionaries describing other plug-ins required by this one. For exmaple:
+  : A list of dictionaries describing other plug-ins required by this one. For example:
 
         <key>plugins</key>
         <array>
@@ -266,7 +266,7 @@ plugins (array)
     These plug-ins will be installed automatically to support your plug-in.
 
 bundles (array)
-  : A more general list of things that must be installed before this plug-in will load. You can also require a minumum version of the bundle. For example:
+  : A more general list of things that must be installed before this plug-in will load. You can also require a minimum version of the bundle. For example:
 
         <key>bundles</key>
         <array>
@@ -815,7 +815,7 @@ See [Object Source Preferences](#object_source_preferences) for details.
 
 ### Actions ###
 
-If the direct object is irrelavent, you can add actions to the catalog directly. They will appear in the first pane with a default action of "Run" in the second pane. Here's an example of creating a `QSAction` directly.
+If the direct object is irrelevant, you can add actions to the catalog directly. They will appear in the first pane with a default action of "Run" in the second pane. Here's an example of creating a `QSAction` directly.
 
     NSDictionary *actionDict = [NSDictionary dictionaryWithObjectsAndKeys:
         @"QSBlahActionProvider", kActionClass,
