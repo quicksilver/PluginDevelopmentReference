@@ -85,19 +85,19 @@ Throughout this document are numerous references to things that go in a plug-in'
 ### QSPlugIn ###
 
 author (string)
-: Put your name(s) here
+: Put your name(s) here.
 
 description (string)
-: A one-line description of your plug-in's purpose. (I'm not sure where this shows up in Quicksilver's UI.)
+: A one-line description of your plug-in's purpose.
 
 extendedDescription (string)
-: This is what the user will see when they click the "info" button in the Plug-ins preferences. It can be text or HTML (recommended).
+: This is what the user will see when they click the Help (?) button in the Plugins section of the preferences. It can be text or HTML (recommended).
 
 icon (string)
-: An image or bundle ID
+: This can be anything recognized by `-[QSResourceManager imageNamed:]`, which generally includes full paths, bundle IDs, or resources defined in various property lists. Other occurrences of `icon` in the property list follow this same convention.
 
 categories (array)
-: This is a list of categories you'd like the plug-in to be listed under. The full list of categories can be found under "All Plug-ins" in the Preferences.
+: This is a list of categories you'd like the plug-in to be listed under. The full list of existing categories can be found under "All Plug-ins" in the Preferences.
 
 hidden (boolean)
 : This is generally only used by internal plug-ins bundled with Quicksilver. It's a boolean that tells whether or not your plug-in should show up on the list in the preferences.
@@ -108,18 +108,24 @@ relatedBundles (array)
 relatedPaths (array)
 : This is a list of paths for files or folders that might be related to your plug-in. This is useful for plug-ins based on some command-line tool(s) with no associated bundle. The path can be absolute, or use things like `~` to refer to the user's home directory. If a related file or folder is present on the system, the plug-in will be listed in the "Recommended" section of the preferences.
 
+recommended (boolean)
+: If a plug-in is likely to appeal to nearly everyone (such as Web Search), you can unconditionally add it to the "Recommended" section by setting this to `YES`.
+
 webIcon (string)
 : You can provide a URL that points to an image here.
 
 ### QSActions ###
 
-The QSActions section contains an array of dictionaries. The key should be an internal name for your action, like `MakeStuffBetter`. Each action can have the following children.
+The QSActions section contains an array of dictionaries. The key should be an internal identifier for your action, like `MakeStuffBetter`. Each action can have the following children.
 
 name (string)
 : The name the user will see (and search for) in the interface
 
-description
-: A one-line description of what the action does
+description (string)
+: A one-line description of what the action does. In interfaces that support it, this will appear in small text under the action's name.
+
+commandFormat
+: A sentence-like string that describes what's going to happen when you run the action. Enter `%@` as a placeholder for the direct object. For actions that take an indirect object, you can add a second placeholder. For example, "Open %@" or "Move %@ to %@".
 
 icon (string)
 : The image that will appear for this action in the interface
@@ -128,7 +134,7 @@ directTypes (array)
 : A list of types this action applies to. It won't show up unless the object in the first pane has one of the types on this list.
 
 directFileTypes (array)
-: If one of your direct types is `NSFilenamesPboardType` (files), you can limit the types of files that match by providing a list of extensions here.
+: If one of your direct types is `NSFilenamesPboardType` (files), you can limit the types of files that match by providing a list of UTIs or extensions here.
 
 indirectTypes (array)
 : The types of objects that are allowed in the third pane (if this action uses it)
@@ -146,13 +152,13 @@ reverseArguments (boolean)
 : If true, the arguments will be sent to the `actionSelector` in the opposite order. Using the example above, an action that allowed cute animals in the first pane and something to make better in the third pane could reuse the `makeStuffBetter:usingCuteAnimal:` method you've already written.
 
 alternateAction (string)
-: The name of the alternate action as it appears in your property list under `QSActions`
+: The identifier of the alternate action
 
 validatesObjects (boolean)
 : This tells Quicksilver whether or not to run `validActionsForDirectObject:`. That method gives you much more fine-grained control in cases where simply checking the type isn't sufficient to decide whether or not an action should be available.
 
 displaysResult (boolean)
-: If true, the Quicksilver interface will reappear after your action runs. You would normally only use this if you action returns a `QSObject`.
+: If true, the Quicksilver interface will reappear after your action runs, but only if your action returns a `QSObject`.
 
 enabled (boolean)
 : Whether or not this action should be available by default when your plug in is installed for the first time
@@ -183,7 +189,7 @@ This lists bundles that should have children provided by your plug-in. (Generall
 
 #### QSApplicationActions ####
 
-These are actions that only appear when a specific application is in the first pane. The key should be the bundle ID of the application. Under this is a dictionary of actions. I'm not entirely sure how to set this up. See the iTunes module for an example.
+These are actions that only appear when a specific application is in the first pane. The key should be the bundle ID of the application. Under this is a dictionary of actions. See the iTunes module for an example.
 
 #### QSProxies ####
 
@@ -231,13 +237,15 @@ allowMatching
 
 ### QSPresetAdditions ###
 
-This section defines catalog entries that should be added by default under Modules in the Catalog preferences. This can be a single item, or a group with individual sources as children. Each object source has different options, so see the existing plug-ins for examples.
+This section defines catalog entries that should be available (but not necessarily active) by default under Plugins in the Catalog preferences. This can be a single entry, or a group with individual entries as children. Each object source has different options, so see the existing plug-ins for examples.
 
 ### QSTriggerAdditions ###
 
-This section defines triggers that should be added by default in the Triggers preferences.
+This section defines triggers that should be added by default in the Triggers preferences. They should almost always be disabled by default.
 
 ### QSRequirements ###
+
+You can define prerequisites and other restrictions for your plug-in. Most of these, if not met, will prevent an installed plug-in from loading, but many of them should tell the on-line update system not to even *offer* the plug-in in the user's list for installation.
 
 version or minSystemVersion (string)
   : The minimum version (build number) of Quicksilver required by this plug-in.
@@ -356,7 +364,7 @@ Since icons have a history of moving around or disappearing with various OS X up
       </array>
     </dict>
 
-The key for a resource defined here can be used as the value for any `icon` in the plist, and it can be used in code:
+The identifier for a resource defined here can be used as the value for any `icon` in the plist, and it can be used in code:
 
     [object setIcon:[QSResourceManager imageNamed:@"QSBlahImage"]];
 
@@ -431,7 +439,7 @@ You create alternate actions just like any other action by adding a section for 
 
 Alternate actions should be able to take the same number of arguments as the main action. You can't define an alternate that requires something in the third pane for an action that doesn't use the third pane.
 
-To define an alternate for an action, add an item named `alternateAction` to your action's properties in `Info.plist`. The value for `alternateAction` should be the name of another action as it appears under "QSActions" in the same plist.
+To define an alternate for an action, add an item named `alternateAction` to your action's properties in `Info.plist`. The value for `alternateAction` should be the identifier of another action.
 
 ### Reverse Actions ###
 
@@ -445,7 +453,7 @@ or
 
 Reverse actions are added to the plist just like any other action. They should be more or less identical to the "forward" version of the action, with a couple of key changes:
 
-  1. The ID (key) of the action should be different.
+  1. The identifier for the action should be different.
   2. The name of the action should be different.
   3. There should be a boolean called `reverseArguments` set to `YES`
 
@@ -485,10 +493,10 @@ For actions that won't support the comma trick, you should use the object valida
 
 Example: `- (NSArray *)validActionsForDirectObject:(QSObject *)dObject indirectObject:(QSObject *)iObject`
 
-If you set `validatesObjects` to TRUE on an action in `Info.plist`, that action will never appear unless you add some corresponding code. This method must exist in `BlahAction.m` and return the name of any actions that you think will be safe to run based on whatever validation steps you've gone through. It should return an array of action names as strings. Perhaps you don't want the actions to work with strings longer than 100 characters or something. You could accomplish that with:
+If you set `validatesObjects` to `YES` on an action in `Info.plist`, that action will never appear unless you add some corresponding code. This method must exist in `BlahAction.m` and return the identifier of any actions that you think will be safe to run based on whatever validation steps you've gone through. It should return an array of action names as strings. Perhaps you don't want the actions to work with strings longer than 100 characters or something. You could accomplish that with:
 
-    NSString *myString=[[dObject arrayForType:QSBlahType] lastObject];
-    NSMutableArray *newActions=[NSMutableArray arrayWithCapacity:1];
+    NSString *myString = [[dObject arrayForType:QSBlahType] lastObject];
+    NSMutableArray *newActions = [NSMutableArray arrayWithCapacity:1];
     if ([myString length] < 100) {
         [newActions addObject:@"FirstAction"];
         [newActions addObject:@"SecondAction"];
@@ -545,7 +553,7 @@ These actions are defined in the `Info.plist` of the plugin, in `QSRegistration`
 
 A `QSCommand` is something that contains a direct object, an action, and an indirect object. In other words, it encapsulates something you would normally put together in Quicksilver's interface.
 
-Commands can be created by users (using the ⌃↩ "encapsulate" keystroke), by code (using methods from the `QSCommand` class), and in a plug-ins `Info.plist` (Under `QSRegistration` → `QSCommands`). Triggers typically (always?) refer to commands for obvious reasons.
+Commands can be created by users (using the ⌃↩ "encapsulate" keystroke), by code (using methods from the `QSCommand` class), and in a plug-ins `Info.plist` (Under `QSRegistration` → `QSCommands`). Triggers refer to commands for obvious reasons.
 
 One thing to note is that commands don't require either a direct or indirect object. For example, the iTunes plug-in comes with a number of predefined triggers like "Play", "Increase Volume", "Increase Rating", etc. These always do the same thing. There's no need to specify an object for them to act on. As a result, the commands these triggers refer to contain only an action.
 
@@ -669,15 +677,17 @@ There are two sections in `Info.plist` you should know about.
 
 `QSPresetAdditions` is where you can list catalog entries that should be present by default when your plug-in is loaded. (These are the things you see in the "Modules" section of the Catalog.) These can be normal existing sources, like "QSFileSystemObjectSource" (a.k.a. File & Folder Scanner), or they can refer to a new source you define yourself.
 
-If you want to see what these look like, open `~/Library/Application Support/Quicksilver/Catalog.plist` and look at the `customEntries` section. In fact, one easy way to create a catalog preset for your plug-in is to create it as a custom entry in Quicksilver, then copy/paste it from `Catalog.plist`. The only thing you may want to add by hand is an `icon`, which can go right under `name`. You'd also change `sources` to something like `QSBlahSource` if you're defining your own.
+If you want to see what these look like, open `~/Library/Application Support/Quicksilver/Catalog.plist` and look at the `customEntries` section. In fact, one easy way to create a catalog preset for your plug-in is to create it as a custom entry in Quicksilver, then copy/paste it from `Catalog.plist`. The only thing you may want to add by hand is an `icon`. You'd also change `sources` to something like `QSBlahSource` if you're defining your own.
 
 The other important section in the `Info.plist` is `QSRegistration`. If you're creating your own source instead of using one of the built-ins, you'll need to add it here so Quicksilver will use it. You'll want to make sure there's a dictionary called `QSObjectSources`. Create an item under this and set both the name and value to the name of the class in `BlahSource.m` that provides the source, such as `QSBlahSource`.
 
-Also under `QSRegistration` are some settings you'll need if you want users to be able to "right arrow" into things (which can also be done with '/'). As far as I can tell, you use `QSBundleChildHandlers` to allow right arrowing into things that don't "belong" to your plug-in and you use `QSObjectHandlers` for things your plug-in will create.
+Also under `QSRegistration` are some settings you'll need if you want users to be able to "right arrow" into things (which can also be done with '/'). You can use `QSBundleChildHandlers` to allow right arrowing into bundles and you use `QSObjectHandlers` to allow arrowing into objects created by plug-ins.
 
 The thing you use `QSBundleChildHandlers` for is generally some application that's already on the system and related to your plug-in, but has no direct knowledge of, or support for Quicksilver. The left hand side should be a bundle identifier, like `com.apple.Finder` and the right hand side should be the name of a class in your plug-in that contains a `loadChildrenForObject:` method.
 
-`QSObjectHandlers` is how you can allow users to "right arrow" into things you create. On the left should be a type of object in Quicksilver and on the right should again be the name of a class in your plug-in that contains a `loadChildrenForObject:` method. This definitely works with types you invent (see Custom Types below) and I assume it will work for existing types, but haven't tried it. This setting must be present for the `setQuickIconForObject:` to get called as well, even if you won't be defining children. It might look like this:
+By default, Quicksilver will show an application's recent documents when right-arrowing. Don't override this without good reason.
+
+`QSObjectHandlers` tells Quicksilver where to go for more information about a particular type. This is typically a type that you've defined, but doesn't have to be. On the left should be a type of object in Quicksilver and on the right should be the name of a class in your plug-in that contains methods like `loadChildrenForObject:`, `setQuickIconForObject:`, etc. It might look like this:
 
     <key>QSObjectHandlers</key>
     <dict>
@@ -687,17 +697,17 @@ The thing you use `QSBundleChildHandlers` for is generally some application that
         <string>QSBlahSource</string>
     </dict>
 
-Note that you can use the same "source" class for all types, or create a separate class for each one. If you use the same source, the `loadChildrenForObject:` method will just have to figure out what to set as children based on the type of object passed to it.
+Note that you can use the same "source" class for all types, or create a separate class for each one. If you use the same source, the methods will just have to figure out what type of object they have before proceeding.
 
 ### Code ###
 
-There are some methods you'll want to define in `BlahSource.m` and Quicksilver will call them at the appropriate time. This is not a complete list of available methods, just the ones I've run across and (I think) figured out. You can look at existing plug-ins for some example code. Note that many of these methods are only called by Quicksilver if you define something for `QSObjectHandlers` in `Info.plist`.
+There are some methods you'll want to define in `BlahSource.m` and Quicksilver will call them at the appropriate time. This is not a complete list of available methods, but the common ones are covered. You can look at existing plug-ins for some example code. Note that many of these methods are only called by Quicksilver if you define something for `QSObjectHandlers` in `Info.plist`.
 
 The information for an entry (from `Info.plist`) can be pulled in like this:
 
     NSMutableDictionary *settings = [theEntry objectForKey:kItemSettings];
 
-Again, existing plug-ins can give you some examples of how to use this info.
+Again, existing plug-ins can give you some examples of how to use this info since the dictionary contents can vary widely from one source to another.
 
 #### objectsForEntry
 
@@ -711,23 +721,23 @@ There are several ways to create a `QSObject`. Here are a couple:
     QSObject *myObject = [QSObject objectWithName:name];
     QSObject *myObject = [QSObject URLObjectWithURL:url];
 
-There is a full list of all the methods available for creating objects in the [Creating](#creating) section of this manual.
+There is a full list of all the methods available for creating objects in the [Creating](#creating) section of this reference.
 
-All of the available ways and the differences between them isn't entirely clear, so experiment and see what works for you. There are also things you may want to do to your objects prior to adding them to the array to be returned, like `setIdentifier:`, `setLabel:`, `setDetails:`, `setName:`, `setObject:forType:` etc. There's a whole section in this document on `QSObject` that provides more details.
+There are also things you may want to do to your objects prior to adding them to the array to be returned, like `setIdentifier:`, `setLabel:`, `setDetails:`, `setName:`, `setObject:forType:` etc. There's a whole section in this document on `QSObject` that provides more details.
 
 #### indexIsValidFromDate
 
 Example `- (BOOL)indexIsValidFromDate:(NSDate *)indexDate forEntry:(NSDictionary *)theEntry`
 
-Quicksilver runs this during scheduled catalog updates (every 10 minutes by default) to ask "Is this catalog entry still up to date?" How you determine the answer to this question is up to you. If this method returns YES/TRUE, Quicksilver moves along without doing anything. If this method returns NO/FALSE, Quicksilver will attempt to update the entry by calling the `objectsForEntry:` method.
+Quicksilver runs this during scheduled catalog updates (every 10 minutes by default) to ask "Is this catalog entry still up to date?" How you determine the answer to this question is up to you. If this method returns `YES`, Quicksilver moves along without doing anything. If this method returns `NO`, Quicksilver will attempt to update the entry by calling the `objectsForEntry:` method.
 
-You can have this method do nothing but return TRUE or FALSE unconditionally, and that's exactly what it does for many plug-ins. Just keep in mind that this will either cause your source to never get updated (except manually) or cause it to get updated on every single rescan (which may be a performance concern, depending on what it does).
+You can have this method do nothing but return `YES` or `NO` unconditionally, and that's exactly what it does for many plug-ins. Just keep in mind that this will either cause your source to never get updated (except manually) or cause it to get updated on every single rescan (which may be a performance concern, depending on what it does).
 
 `indexDate` and `theEntry` are passed in by Quicksilver. The `indexDate` tells you when the entry was last updated in the catalog. `theEntry` contains information about the entry that you might need (file paths, URLs, etc.).
 
 **NOTE**: This method is not consulted when your plug-in is first installed or when a user selects the entry in the catalog and hits the "rescan" button manually. In other words, if you're checking for errors with your source here to avoid unnecessary rescans, that's good, but you still need to check for errors in `objectsForEntry:` as well, because it will be called at least once.
 
-To rescan your entry when a file is changed:
+To rescan your entry when a file has changed been changed since the last scan:
 
     - (BOOL)indexIsValidFromDate:(NSDate *)indexDate forEntry:(NSDictionary *)theEntry
     {
@@ -767,9 +777,9 @@ If you call `setIcon:` when adding objects to the catalog, they will show up at 
 
     [object setIcon:[QSResourceManager imageNamed:@"GenericNetworkIcon"]];
 
-Quicksilver calls this in real-time as objects need to be displayed, which is why it appears more reliably. (It's probably more efficient that way too, compared to storing an icon to everything in the catalog whether it gets used or not.)
+Quicksilver calls this in real-time as objects need to be displayed, which is why it appears more reliably. (It's probably more efficient that way too, compared to storing an icon for everything in the catalog whether it gets used or not.)
 
-As the name implies, you should only use this for icons that are ready to display quickly. Generally, that means icons or images that are already on disk or in memory. If you need to do anything more expensive, like generate a Quick Look preview, add a badge to the icon, or fetch an image over the network, do it in `loadIconForObject:`.
+As the name implies, you should only use this for icons that are ready to display quickly. Generally, that means icons or images that are already in memory or on a fast, local disk. If you need to do anything more expensive, like generate a Quick Look preview, add a badge to the icon, or fetch an image over the network, do it in `loadIconForObject:`.
 
 #### loadIconForObject
 
@@ -806,7 +816,7 @@ This method is used to indicate to the user that an object is browsable (can be 
 
 If you used `loadChildrenForObject:` so the user can right arrow into an object, you should indicate that to the user by having this method return `YES`.
 
-**NOTE**: Not returning `YES` will hide the little arrow indicator, but the user will still be able to arrow into the object, if you provided children for the object by using `loadChildrenForObject:`.
+**NOTE**: Returning `NO` (or leaving this method out) will hide the little arrow indicator, but the user will still be able to arrow into the object if you provided children for the object by using `loadChildrenForObject:`.
 
 #### isVisibleSource
 
@@ -818,9 +828,13 @@ Return `NO` to keep this off of the drop-down. Return `YES` if you want users to
 
 See [Object Source Preferences](#object_source_preferences) for details.
 
+<!-- TODO explain how to invalidate an entry (force a rescan)
+### Forcing an Immediate Rescan ###
+-->
+
 ### Actions ###
 
-If the direct object is irrelevant, you can add actions to the catalog directly. They will appear in the first pane with a default action of "Run" in the second pane. Here's an example of creating a `QSAction` directly.
+If the direct object is irrelevant, you can add actions directly to the catalog. They will appear in the first pane with a default action of "Run" in the second pane. Here's an example of creating a `QSAction` programatically.
 
     NSDictionary *actionDict = [NSDictionary dictionaryWithObjectsAndKeys:
         @"QSBlahActionProvider", kActionClass,
@@ -841,23 +855,21 @@ You may want to add a new type of thing to Quicksilver's catalog that doesn't co
 
 ### Source ###
 
-To use a custom type when adding objects to the catalog, the first thing to do is add something like this to `BlahSource.h`:
-
-    #define QSBlahType @"QSBlahType"
-
-Then, in your `objectsForEntry:` method in `BlahSource.m`, you would do something like this on each QSObject before adding it to the array:
-
-    [myObject setObject:someIdentifier forType:QSBlahType];
-
-Now, when you're adding actions to the `Info.plist`, they can use this as a value under `directTypes` or `indirectTypes`. You will almost certainly want to assign other types in addition to the one you've created. See "Types" in the QSObject section for details.
-
-### Actions ###
-
-Speaking of actions, if your action(s) need to refer to your custom type, you should add something like this to `BlahAction.h`:
+To use a custom type when adding objects to the catalog, the first thing to do is add something like this to one of your header files:
 
     #define QSBlahType @"blah.specific.type"
 
-And then in the various action methods in `BlahAction.m`, you can test for objects of that type with something like this:
+You'll probably want to use this in your action code too, so many plug-ins define things like this in a dedicated file, rather than in the object source.
+
+Then, in your `objectsForEntry:` method in `BlahSource.m`, you would do something like this on each QSObject before adding it to the array:
+
+    [myObject setObject:someValue forType:QSBlahType];
+
+Now, when you're adding actions to the `Info.plist`, they can use "blah.specific.type" as a value under `directTypes` or `indirectTypes`. You will almost certainly want to assign other types in addition to the one you've created. See "Types" in the QSObject section for details.
+
+### Actions ###
+
+Speaking of actions, if your action(s) need to refer to your custom type, you should include the header where the type is defined, then in the various action methods in `BlahAction.m`, you can test for objects of that type with something like this:
 
     if ([dObject containsType:QSBlahType]) {}
 
@@ -865,11 +877,11 @@ This allows you to use code completion and reduce the chance for typing errors. 
 
 ## QSObject ##
 
-Your plug-in will communicate with Quicksilver pretty much entirely through `QSObject` objects. That is, Quicksilver will send `QSObject`s to your methods, and if you need to send something back to Quicksilver, you'll return either a single `QSObject` or an array of them. Here's what I know about creating them and using those previously created.
+Your plug-in will communicate with Quicksilver pretty much entirely through `QSObject` objects. That is, Quicksilver will send `QSObject`s to your methods, and if you need to send something back to Quicksilver, you'll return either a single `QSObject` or an array of them. Here are some details on creating them and using those previously created.
 
 ### Creating ###
 
-You'll need to create `QSObject`s if adding things to the catalog and also if your action needs to send something back to Quicksilver (to end up in the first pane of the UI). This section is largely written with adding to the catalog in mind, but the information should be useful for returning objects for display as well (because it's so dead simple by comparison). There seem to be several methods for creating new `QSObject`s. Here are a couple I've run across.
+You'll need to create `QSObject`s if adding things to the catalog and also if your action needs to send something back to Quicksilver (to end up in the first pane of the UI). This section is largely written with adding to the catalog in mind, but the information should be useful for returning objects for display as well (because it's so dead simple by comparison). There are several methods for creating new `QSObject`s. Here are some of the most common.
 
   * objectWithString
   * objectWithName
@@ -885,7 +897,7 @@ In my experience, you don't need to do anything more than the above to create a 
 
 #### Identifier ####
 
-An identifier for your `QSObject` doesn't seem to be required (or perhaps Quicksilver will pick one internally if you don't explicitly set one) but I recommend always setting one. In any case, it's important to understand how they're used. You set one like this:
+An identifier for your `QSObject` isn't required, but I recommend always setting one. In any case, it's important to understand how they're used. You set one like this:
 
     [myObject setIdentifier:someString];
 
@@ -893,15 +905,23 @@ In addition to actually storing the identifier string in your object, this cause
 
 If you choose an identifier that is already in use, you will **replace the existing object** with your new one in the registry. This has a couple of implications. First, you should obviously pick a unique string to use as an identifier. Second, if you end up "recreating" various objects (either to appear in the third pane, or to act as children for another object) be careful what you do with them. Here are some tips:
 
-  1. For objects that just serve some temporary purpose in the UI, don't even set an identifier.
+  1. For objects that just serve some temporary purpose in the UI, add a prefix to the identifier, or don't even set one.
   2. Wherever possible, use existing objects instead of recreating identical ones.
   3. If you want to use an existing object, but modify it in some way, create a new empty `QSObject` and assign it attributes from the existing object as needed.
 
 #### Name ####
 
-If you've created an object using on of QSObject's more 'basic' methods such as `objectWithIdentifier:` or even `[[QSObject alloc] init]` it is important to set the object's name using the `setName:@"some name"` method.
+If you've created an object using one of QSObject's more 'basic' methods such as `objectWithIdentifier:` or even `[[QSObject alloc] init]` it is important to set the object's name using the `setName:@"some name"` method.
 
 This is the most prominent string in the UI (unless you set a label), and Quicksilver matches against it when a user is typing.
+
+#### Label ####
+
+This is optional, but if you want the text that appears most prominently in the user interface to be something other than the name, you can set this using `setLabel:@"some string"`.
+
+This is also the string that Quicksilver matches against when a user is typing, so keep that in mind. You can make things easier for users to find in the catalog by messing with the label. (The name will still be searchable as well, and will appear instead when matched.)
+
+If you set name and label to the same thing, the value will be set as the name and the label will be removed automatically.
 
 #### Type ####
 
@@ -948,14 +968,6 @@ Here are all the types Quicksilver declares in `QSTypes.h`. Examples of their cr
 
 A warning about arrays: If you call `[object setObject:someArray forType:QSBlahType]` then call `[object objectForType:QSBlahType]`, you will only get the array's last object. To get the original array back, call `[object arrayForType:QSBlahType]` instead.
 
-#### Label ####
-
-This is optional, but if you want the text that appears most prominently in the user interface to be something other than the name, you can set this using `setLabel:@"some string"`.
-
-This is also the string that Quicksilver matches against when a user is typing, so keep that in mind. You can make things easier for users to find in the catalog by messing with the label. (The name will still be searchable as well, and will appear instead when matched.)
-
-Setting the label will not change the appearance of the search result list, only the main QS panes. In the result list, the label wont be displayed. Instead, the name will still be the most prominent thing displayed.
-
 #### Details ####
 
 The "details" string is the text that appears smaller underneath the label in most Quicksilver interfaces. Set it using `setDetails:@"some string"`.
@@ -964,7 +976,7 @@ Setting this explicitly is optional but if you don't, Quicksilver will pick some
 
 #### Icon ####
 
-You can set an icon for a `QSObject` using the `setIcon:` method. I'm not even sure what it takes (an `NSImage` probably?), but Quicksilver makes it easy for you with `QSResourceManager`. Just do something like this:
+You can set an icon (as an `NSImage`) for a `QSObject` using the `setIcon:` method. Quicksilver makes it easy go get various images with `QSResourceManager`. Just do something like this:
 
     [myObject setIcon:[QSResourceManager imageNamed:@"GenericNetworkIcon"]];
 
@@ -991,7 +1003,8 @@ That will allow you to refer to the icon in your code with something like
 
 Finally, if you want to use the icon for a particular file type, here's one method using the extension.
 
-    [myObject setIcon:[[NSWorkspace sharedWorkspace] iconForFileType:@"pdf"]];
+    NSImage *pdfIcon = [[NSWorkspace sharedWorkspace] iconForFileType:@"pdf"];
+    [myObject setIcon:pdfIcon];
 
 #### Children ####
 
@@ -1009,19 +1022,19 @@ So, before using `[myObject setChildren:children]` to set children for an object
 
     [childObject setParentID:[myObject identifier]];
 
-Then, once the user arrows back out of the list of children, the correct object will be selected in the main QS pane and also be highlighted in the result list. If this isn't set, the selected child object will remain in the QS pane and the first result will be highlighted in the result list. This can lead to much confusion, so it should be avoided.
+Then, once the user arrows back out of the list of children, the correct object will be selected in the main QS pane and also be highlighted in the result list.
 
 <!-- TODO imho this should be done automatically inside the setChildren method, but that isn't done right now :-/ -->
 
 #### Arbitrary Metadata ####
 
-In addition to the standard things like name, label, icon, and type, `QSObject`s provide an `NSMutableDictionary`. You can store just about anything in here, so the possibilities for your plug-in get really interesting with this. If your objects are files, perhaps you want to store their size here. Perhaps you want to store width, height, and resolution for an image. Maybe you want to store a thumbnail image for the object. (It doesn't have to be a string.) Perhaps you just like to waste memory on other people's computers and want to store the lyrics to your favorite song.
+In addition to the standard things like name, label, icon, and type, `QSObject`s provide a metadata dictionary. You can store just about anything in here, so the possibilities for your plug-in get really interesting with this. If your objects are files, perhaps you want to store their size here. Perhaps you want to store width, height, and resolution for an image. Maybe you want to store a thumbnail image for the object. (It doesn't have to be a string.) Perhaps you just like to waste memory on other people's computers and want to store the lyrics to your favorite song.
 
-Dictionaries are just lists of key:value pairs, so to add your custom thing to the object, you would do something like:
+To add your custom metadata to the object, you would do something like:
 
     [myObject setObject:value forMeta:@"key name"];
 
-The key name is just a string you'll use to refer to this thing in the dictionary later. The value can by any type of Cocoa object.
+The key name is just a string you'll use to refer to this thing in the dictionary later. The value can by any type of object.
 
 There'll be more on this in the next section. As a real-world example, one use I found for this was customizing icons for things in the catalog. As mentioned elsewhere, using `setIcon:` when things are added to the catalog is the wrong approach. You could probably store the icon as metadata, but this is inefficient. A better approach is to just store some identifying string as metadata, and move the logic that uses that data over to the `setQuickIconForObject:` method.
 
@@ -1043,9 +1056,9 @@ If you're familiar with what an object contains and you want to get the name or 
 
 To retrieve metadata that you may have set when adding objects to the catalog:
 
-    NSString *value = [dObject objectForMeta:@"key name"];
+    id value = [dObject objectForMeta:@"key name"];
 
-Of course you would only use `NSString` if that was the type of object you stored.
+Of course you if you know the type of object, you can be more specific than `id`.
 
 This metadata has many possibilities, but two of the more obvious are:
 
@@ -1062,11 +1075,15 @@ The `objectWithIdentifier:` method will return an existing `QSObject` if you kno
 
     QSObject *thisGuy = [QSObject objectWithIdentifier:uuid];
 
-The objects are looked up and returned from the object registry. I'm not sure exactly what the relationship is between the object registry and the catalog. Looking at the Quicksilver source indicates that they're independent, but in practice, I haven't been able to request an object by identifier unless it is in the catalog. If that's true, then the object your requesting must have been added to the catalog by `objectsForEntry:` at some prior point.
+If building plug-ins for build 4008 or higher, you should get objects from `QSLibrarian` instead.
+
+    QSObject *thisGuy = [QSLib objectWithIdentifier:uuid];
+
+As a general rule, this will only work for objects that have been added to the catalog. It might work for other objects if they were recently used and are still in memory.
 
 #### Getting Specific Objects by Type ####
 
-You can use `QSLib` to retrieve objects from Quicksilver's catalog by type. The most common uses for this are to restrict the objects that appear in the third pane, and to build up a list of children for another object.
+You can use `QSLibrarian` to retrieve objects from Quicksilver's catalog by type. The most common uses for this are to restrict the objects that appear in the third pane, and to build up a list of children for another object.
 
 To simply get everything of a certain type, call this:
 
@@ -1096,7 +1113,7 @@ A lot can be figured out by looking through `QSObject.m`. If you really want to 
 
 ## Proxy Objects ##
 
-The property list entry that defines a proxy object is discussed above. See [`QSProxies`](#qsproxies). The `providerClass` defined in the plist must implement at least the `resolveProxyObject:` method.
+The property list entry that defines a proxy object is discussed above. See [`QSProxies`](#qsproxies). The `providerClass` defined in the plist should conform to the `QSProxyObjectProvider` protocol. The most important method there is `resolveProxyObject:`.
 
 This method is responsible for returning the "real" object referred to by one or more proxies. If the class is only responsible for one proxy object, it usually returns an object blindly, but if it handles more than one, it needs to see which (usually by checking the identifier) before returning a value.
 
@@ -1113,7 +1130,7 @@ This method is responsible for returning the "real" object referred to by one or
 
 There are other optional methods you can implement in the `providerClass` for proxy objects.
 
-Proxies are often requested multiple times in rapid succession, so Quicksilver tries to avoid resolving them every time. You can control the amount of time a proxy will hold onto its current value before doing the work of resolving it again. The default is 3 seconds. 0 is not recommended.
+Proxies are often requested multiple times in rapid succession, so Quicksilver tries to avoid resolving them every time. You can control the amount of time a proxy will hold onto its current value before doing the work of resolving it again. The default is 3 seconds. 0 is not recommended, but might make sense when the value of the object is already in memory.
 
     - (NSTimeInterval)cacheTimeForProxy:(id)proxy
     {
