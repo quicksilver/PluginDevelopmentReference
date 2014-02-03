@@ -844,7 +844,7 @@ If the direct object is irrelevant, you can add actions directly to the catalog.
         nil];
     
     newObject = [QSAction actionWithDictionary:actionDict
-        identifier:@“QSBlahDoSomething”
+        identifier:@"QSBlahDoSomething"
         bundle:nil];
 
 You could have that in your `objectsForEntry:` method and add `newObject` to the array it returns.
