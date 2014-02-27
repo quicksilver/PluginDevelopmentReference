@@ -1416,8 +1416,9 @@ There are a few things we've been doing to every plug-in we update. If you're wo
       * Look at the `Configuration` folder in the File Inspector. Make sure it's set as an "Absolute Path" and that the path is `/private/tmp/QS/Configuration` (The "full path" won't include `/private` and that's fine.)
       * Under the `Configuration` folder, remove references to `QSPlugIn_Release.xcconfig` and `QSPlugIn_Debug.xcconfig` (if they exist). They're not necessary with Xcode 4.
       * Select the project in the Project Navigator then go to the project's "Info" tab. Under Configurations, you should see "Debug" and "Release". The project under each should be based on "Debug" or "Release" respectively, and the target under each should be based on "QSPlugIn".
-      * Go through the build settings for both the project and the target. As a general rule, nothing should be in bold except "Product Name". Select anything that's bold and hit Delete.
-  2. Make sure `bltrversion` runs first
+      * Go through the build settings for both the project and the target. As a general rule, nothing should be in bold. Select anything that's bold and hit Delete.
+      * Optionally enable Automatic Reference Counting. (This is likely to be the default in Quicksilver's `.xcconfig` files soon.)
+  2. Use the shared copy of `bltrversion`
       * Go to the target's "Build Phases" tab.
       * Drag the "Run Script" phase for `bltrversion` as high as you can (it should be 2nd on the list).
       * Change the content of the script to `"$QS_BUILD_ROOT/Tools/bltrversion"`
@@ -1428,6 +1429,7 @@ There are a few things we've been doing to every plug-in we update. If you're wo
       * Add "Bundle versions string, short" and set it to something like 1.0.0
       * Add "Bundle display name". This name will have the type (Quicksilver Plugin) appended to it, so it shouldn't necessarily match the Bundle name. For example, if the display name is "Blah Plugin", it will show up as "Blah Plugin Quicksilver Plugin", so keep it simple.
       * Remove unused or obsolete keys (QSPlugIn → qsversion, QSRequirements → level)
+      * Set the executable name to `${EXECUTABLE_NAME}`. This should make it automatically match the Product Name from the target.
   6. Look for any references to "module" or "plug-in" and change them to "plugin". Even though "plug-in" is correct, the community has elected to go another way, so keep it consistent.
   7. Update the code for 64-bit. The specifics are well documented elsewhere, so I'm not going to cover it here.
   8. Last but not least, **make sure the plug-in has adequate documentation** for end-users.
