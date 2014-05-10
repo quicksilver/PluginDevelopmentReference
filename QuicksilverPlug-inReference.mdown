@@ -1,7 +1,7 @@
 # Quicksilver Plug-ins #
 
 A haphazard reference by Rob McBroom <qsplugins@skurfer.com> with contributions from
-
+m
   * Henning Jungkurth
   * Patrick Robertson
   * Etienne Samson
@@ -247,10 +247,10 @@ This section defines triggers that should be added by default in the Triggers pr
 
 You can define prerequisites and other restrictions for your plug-in. Most of these, if not met, will prevent an installed plug-in from loading, but many of them should tell the on-line update system not to even *offer* the plug-in in the user's list for installation.
 
-version or minSystemVersion (string)
-  : The minimum version (build number) of Quicksilver required by this plug-in.
+minHostVersion (string)
+  : The minimum version (build number) of Quicksilver required by this plug-in. Note: this replaces the now obsolete 'version (string)' key
 
-maxSystemVersion (string)
+maxHostVersion (string)
   : The maximum version (build number) of Quicksilver this plug-in will work with.
 
 osRequired (string)
