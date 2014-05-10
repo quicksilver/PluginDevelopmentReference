@@ -1,7 +1,7 @@
 # Quicksilver Plug-ins #
 
 A haphazard reference by Rob McBroom <qsplugins@skurfer.com> with contributions from
-m
+
   * Henning Jungkurth
   * Patrick Robertson
   * Etienne Samson
