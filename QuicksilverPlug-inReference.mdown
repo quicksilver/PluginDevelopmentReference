@@ -183,6 +183,26 @@ This section gives Quicksilver additional information about your plug-in.
 
 This allows your custom type(s) to appear in the Actions section of the preferences. Any new types provided by your plug-in should be described here. The key is the name of a type as defined in your code. Each entry should have two children: `name` and `icon`.
 
+An optional key available starting in Quicksilver build 4012 is `smartspace`. The value for `smartspace` should be an integer from 1 to 6. (Set the type to "Number".) You only need to define this if the default smart spacebar behavior is undesirable for this type of object.
+
+What is the default behavior?
+
+  * If in the second pane, select the first action that takes an argument in the third pane
+  * If user is holding Shift, go to the parent (same as left arrow)
+  * If the object has children, show them (unless it's a text file)
+  * Jump to the third pane if the current action requires it
+  * Quick Look if the object supports it
+  * Switch to text mode
+
+The available override values and their behaviors are:
+
+  * 1 - type a space
+  * 2 - next result (act like down arrow or ⌃J)
+  * 3 - jump to argument field (third pane)
+  * 4 - switch to text-entry mode
+  * 5 - show children (act like right arrow or slash)
+  * 6 - Quick Look
+
 #### QSBundleChildHandlers ####
 
 This lists bundles that should have children provided by your plug-in. (Generally this is used to allow right-arrowing into an existing application like Mail or Address Book.) The key should be the bundle ID, and the value should be the name of a class that contains a `loadChildrenForObject:` method.
