@@ -125,7 +125,7 @@ description (string)
 : A one-line description of what the action does. In interfaces that support it, this will appear in small text under the action's name.
 
 commandFormat
-: A sentence-like string that describes what's going to happen when you run the action. Enter `%@` as a placeholder for the direct object. For actions that take an indirect object, you can add a second placeholder. For example, "Open %@" or "Move %@ to %@".
+: A sentence-like string that describes what's going to happen when you run the action. Enter `%@` as a placeholder for the direct object. For actions that take an indirect object, you can add a second placeholder. For example, "Move %@ to %@". In some cases, you might want to reverse the order of the two objects' names. That can be done by numbering them, as in "Search for %2$@ using %1$@".
 
 icon (string)
 : The image that will appear for this action in the interface
