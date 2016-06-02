@@ -1308,9 +1308,28 @@ If you don't pass anything, the Event Trigger Object will just be a string objec
 
 If you plan to use the Scripting Bridge in your plug-in, here are some tips.
 
-### Setting Up the Project ##
+In addition to the steps from [Getting Started](#getting_started), you'll need two more things in your project:
 
-In addition to the steps from [Getting Started](#getting_started), you'll need to do this:
+  1. The Scripting Bridge framework
+  2. A header file describing the capabilities of the application you want to script
+
+The framework is included with OS X and can be added like any other. For the header file, there are two ways to proceed: Generate the file and add it to the project, or have the file generated automatically when you build the plug-in.
+
+The automatic way means you'll always have the latest header if something changes, but it's more complicated to set up, it makes searching the project more difficult, and you may get changes you didn't want.
+
+Both methods are described here. Choose only one.
+
+### Adding the Header Manually ###
+
+To create the header file, you'll want to run `sdef` on the application in question, then pipe its output to `sdp` and define a base name for all the classes. (The base name is usually the application's name with no whitespace.)
+
+For example, to create a header for scripting Safari:
+
+    sdef /Applications/Safari.app  | sdp -fh --basename Safari
+
+This will create `Safari.h` in the current directory. Add that file to your plug-in project in Xcode, and you'll be able to import it from any one of your files.
+
+### Generating the Header During Build ###
 
   1. Drag the application(s) you want scripting support for into your project. Don't let it copy the files.
   2. Use the Utilities panel to change the location for each application to "Absolute Path".
