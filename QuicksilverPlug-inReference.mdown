@@ -259,6 +259,8 @@ allowMatching
 
 This section defines catalog entries that should be available (but not necessarily active) by default under Plugins in the Catalog preferences. This can be a single entry, or a group with individual entries as children. Each object source has different options, so see the existing plug-ins for examples.
 
+Note that the identifier for a preset should start with "QSPreset", especially if you define its `enabled` setting. If the identifier doesn't start with "QSPreset", it will fall back to the default you define for `enabled` on launch. In other words, you can never disable or enable these entries permanently.
+
 ### QSTriggerAdditions ###
 
 This section defines triggers that should be added by default in the Triggers preferences. They should almost always be disabled by default.
