@@ -24,28 +24,19 @@ To compile most plug-ins, you'll need to build Quicksilver itself [from source][
 
 To create a new plug-in:
 
-  1. Get the Xcode Project template from [the GitHub repository][ghref]
-  2. Copy `Quicksilver Plug-in.xctemplate` to `~/Library/Developer/Xcode/Templates/Application Plug-in`
-  3. Create a new project in Xcode. You should see "Quicksilver Plug-in" in the "Application Plug-in" category.
-  4. There are three types to choose from. Standard, Scripting Bridge (which is like Standard but adds the Scripting Bridge framework), and Interface which is mainly useless for now.
-  5. I would tell it not to create a Git repo automatically, since there will be a lot of meaningless changes right out of the gate.
-
-Once the project has been created, it needs a lot of work due to bugs and annoying defaults in Xcode.
-
-  1. Close the project in Xcode
-  2. Go to the project's directory in Terminal
-  3. Run `python Blah/qs_fix_project.py` (where "Blah" is the name of the project)
-  4. Do a Release (or Debug) build of Quicksilver to get some things created in `/tmp/QS`.
-  5. Open the project in Xcode again.
+  1. [Install Cookiecutter][icc]
+  2. Run `cookiecutter https://github.com/quicksilver/plugin_template`
+  3. Open the new project in Xcode
 
 You should now have a plug-in that will build. If you want to use [Scripting Bridge](#scripting_bridge), see the additional steps in that section.
 
-Now might be a good time to create your Git repository and make the initial commit. The `qs_fix_project.py` script creates a default `.gitignore` for you.
+Now might be a good time to create your Git repository and make the initial commit.
 
 Many of the items in the template's `Info.plist` are named "SomethingTemplate". This prevents Quicksilver from having to process unused features. If you need to use settings in any of these sections, just rename them, removing "Template" from the end.
 
 [ghref]: https://github.com/quicksilver/PluginDevelopmentReference
 [qssource]: https://github.com/quicksilver/Quicksilver
+[icc]: https://cookiecutter.readthedocs.io/en/latest/installation.html
 
 ## Documentation and `bltrversion` ##
 
