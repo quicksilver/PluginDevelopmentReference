@@ -1335,12 +1335,19 @@ This will create `Safari.h` in the current directory. Add that file to your plug
   7. Add a new build rule, set Process to "Source files with names matching" and enter `*.app`
   8. Select "Custom script" and enter this command:
 
-        sdef "$INPUT_FILE_PATH" | sdp -fh -o "$DERIVED_FILES_DIR" --basename "$INPUT_FILE_BASE"	--bundleid `defaults read "$INPUT_FILE_PATH/Contents/Info" CFBundleIdentifier`
+        ```sh
+        sdef "$INPUT_FILE_PATH" |
+            sdp -fh -o "$DERIVED_FILES_DIR" \
+                --basename "$INPUT_FILE_BASE" \
+                --bundleid $(defaults read "$INPUT_FILE_PATH/Contents/Info" CFBundleIdentifier)
+        ```
 
   9. Add an output file with the path `$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).h`
   10. Add a line to import the resulting header file to the appropriate header files in your project. For example, if you added Safari, you'd enter:
 
+        ```objc
         #import "Safari.h"
+        ```
 
       This file won't exist until you build for the first time.
 
