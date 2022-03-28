@@ -28,7 +28,7 @@ To create a new plug-in:
   2. Run `cookiecutter https://github.com/quicksilver/plugin_template`
   3. Open the new project in Xcode
 
-You should now have a plug-in that will build. If you want to use [Scripting Bridge](#scripting_bridge), see the additional steps in that section.
+You should now have a plug-in that will build. If you want to use [Scripting Bridge](#scripting-bridge), see the additional steps in that section.
 
 Now might be a good time to create your Git repository and make the initial commit.
 
