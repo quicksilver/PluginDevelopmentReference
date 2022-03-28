@@ -231,7 +231,7 @@ Your plug-in can post notifications that can be used to signal an event trigger.
 
 name
   : The name that will appear in the pop-up menu.
-    
+
     For events generated exclusively by Quicksilver, you should add `☿` after the name. For example, the "File Tagged" event will not be detected when files are tagged in Finder; only when the tags are modified by a Quicksilver action. So the name is shown as "File Tagged ☿".
 
 type
@@ -341,7 +341,7 @@ obsoletes (array)
         </array>
 
     The update system will alert users with the obsolete plug-ins that your plug-in is available (and what it replaces). You could also use the `obsoletes` key to change the bundle identifier for an existing plug-in, but care should be taken in using it for this purpose.
-  
+
     To use the `obsoletes` key, you should also require Quicksilver version 3926 or higher.
 
 ### QSResourceAdditions ###
@@ -547,7 +547,7 @@ It's possible to define actions that exist only as AppleScript and not as Object
   1. `actionClass` should be set to "QSAppleScriptActions".
   2. `actionScript` should be set to the name of an AppleScript file, like "Blah.scpt". This script will need to be copied into your plug-in's `Resources` folder. A single AppleScript file can handle multiple actions (by using different `actionHandler`s).
   3. `actionHandler` should be the name of a function in the script, like "do_this_thing" (assuming the script has something like this in it).
-     
+
         on do_this_thing(objectFromQuicksilver)
             tell application "XYZ" to lick the face of objectFromQuicksilver
         end do_this_thing
@@ -855,7 +855,7 @@ If the direct object is irrelevant, you can add actions directly to the catalog.
         @"BlahIcon", kActionIcon,
         @"Do Something", @"name",
         nil];
-    
+
     newObject = [QSAction actionWithDictionary:actionDict
         identifier:@"QSBlahDoSomething"
         bundle:nil];
@@ -1187,7 +1187,7 @@ This is a rough outline of what you need to do to add a preference pane for your
   * set File's Owner to be `QSBlahPrefPane`
   * connect the window to `_window` on File's Owner
   * add something like this to the plist under `QSRegistration`:
-  
+
         <key>QSPreferencePanes</key>
         <dict>
             <key>QSBlahPrefPane</key>
@@ -1202,7 +1202,7 @@ This is a rough outline of what you need to do to add a preference pane for your
                   <string>QSBlahImage</string>
               </dict>
         </dict>
-  
+
   * add your controls to the window and bind them to the right preferences (Shared Preferences Controller → values → QSBlahSetting)
 
    **Note:** You can create clickable href-links to your preference pane using the format `qs://<MyPreferencePaneClass>` that link directly to your preference pane. E.g. if your preference pane class is called `QSBlahPrefPane`, the link `qs://QSBlahPrefPane` will take you directly to your preference pane. This can be useful for linking users to the preference pane from websites, or opening the preference pane from within your plugin using `[[NSWorkspace sharedWorkspace] openURL:[NSURL UrlWithPath:@"qs://QSBlahPrefPane"]];`
@@ -1334,14 +1334,14 @@ This will create `Safari.h` in the current directory. Add that file to your plug
   6. Go to the "Build Rules" tab.
   7. Add a new build rule, set Process to "Source files with names matching" and enter `*.app`
   8. Select "Custom script" and enter this command:
-  
+
         sdef "$INPUT_FILE_PATH" | sdp -fh -o "$DERIVED_FILES_DIR" --basename "$INPUT_FILE_BASE"	--bundleid `defaults read "$INPUT_FILE_PATH/Contents/Info" CFBundleIdentifier`
-  
+
   9. Add an output file with the path `$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).h`
   10. Add a line to import the resulting header file to the appropriate header files in your project. For example, if you added Safari, you'd enter:
-  
+
         #import "Safari.h"
-        
+
       This file won't exist until you build for the first time.
 
 ### Overview ###
