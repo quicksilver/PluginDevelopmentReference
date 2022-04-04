@@ -50,6 +50,10 @@ It's processed using [Python-Markdown][pymd] with the [extra extension][mdex] en
 
 If you need to refer to a Unix command, be aware of OS X's `x-man-page://` URL scheme. For example, linking to `x-man-page://ls` will open the man page for `ls` in a special Terminal window.
 
+### Linking to Other Documentation ###
+
+If in your plugin's Documentation, you want to link to the docs of another plugin, then use the relevant **full** URL from https://qsapp.com/manual/. E.g. to link to the E-Mail Support plugin's documentation, use the following URL: https://qsapp.com/manual/plugins/emailsupport/
+
 ### bltrversion ###
 
 This script is called every time you build your project. A short explanation of what it does and the implications is in order. Every time you build, it will:
