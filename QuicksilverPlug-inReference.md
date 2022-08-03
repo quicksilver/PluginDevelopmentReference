@@ -50,6 +50,10 @@ It's processed using [Python-Markdown][pymd] with the [extra extension][mdex] en
 
 If you need to refer to a Unix command, be aware of OS X's `x-man-page://` URL scheme. For example, linking to `x-man-page://ls` will open the man page for `ls` in a special Terminal window.
 
+### Linking to Other Documentation ###
+
+If in your plugin's Documentation, you want to link to the docs of another plugin, then use the relevant **full** URL from https://qsapp.com/manual/. E.g. to link to the E-Mail Support plugin's documentation, use the following URL: https://qsapp.com/manual/plugins/emailsupport/
+
 ### bltrversion ###
 
 This script is called every time you build your project. A short explanation of what it does and the implications is in order. Every time you build, it will:
@@ -142,28 +146,28 @@ actionSelector (string)
 reverseArguments (boolean)
 : If true, the arguments will be sent to the `actionSelector` in the opposite order. Using the example above, an action that allowed cute animals in the first pane and something to make better in the third pane could reuse the `makeStuffBetter:usingCuteAnimal:` method you've already written.
 
-alternateAction (string)
+alternateAction (String)
 : The identifier of the alternate action
 
-validatesObjects (boolean)
+validatesObjects (Boolean)
 : This tells Quicksilver whether or not to run `validActionsForDirectObject:`. That method gives you much more fine-grained control in cases where simply checking the type isn't sufficient to decide whether or not an action should be available.
 
-displaysResult (boolean)
+displaysResult (Boolean)
 : If true, the Quicksilver interface will reappear after your action runs, but only if your action returns a `QSObject`.
 
-enabled (boolean)
+enabled (Boolean)
 : Whether or not this action should be available by default when your plug in is installed for the first time
 
-precedence (float)
-: A number between 0.0 and 4.0. You should generally only use this if the action applies to a new type created by your plug-in, and not for any of the types Quicksilver knows of by default. Most of the built-in default actions have a low precedence and you can very easily overpower them here. Users would not appreciate this action suddenly becoming the default for files or text.
+precedence (Number)
+: A number between 0.0 and 4.0. A higher number means the action will rank higher in the 2nd pane. You should generally only use this if the action applies to a new type created by your plug-in, and not for any of the types Quicksilver knows of by default (especially files or text). Most of the built-in default actions have a low precedence and you can very easily overpower them here. Users would not appreciate this action suddenly becoming the default for files or text.
 
-runInMainThread (boolean)
-: If true, this forces the action to be run in the main thread (for timers or actions that calculate a delay)
+runInMainThread (Boolean)
+: If true, this forces the action to be run in the main thread (for actions that interact some way with the user interface, you must set this to YES)
 
-hidden (boolean)
-: Whether or not the action should be directly usable by the user. You might want to set this for an alternate action.
+hidden (Boolean)
+: Whether or not the action should be directly usable by the user. Hiding an action can be useful for example when you want to create an alternate action.
 
-resolvesProxy (boolean)
+resolvesProxy (Boolean)
 : By default, Quicksilver resolves proxy objects and passes the resulting "real" object on to the action. This prevents actions from having to test for and resolve proxies themselves. In rare cases, you might need to pass the proxy to an action as is. If so, set this to `NO`.
 
 ### QSRegistration ###
