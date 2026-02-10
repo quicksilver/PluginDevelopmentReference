@@ -1,3 +1,8 @@
+# ARCHIVED
+
+This repository has been archived, and all content moved to the [Quicksilver manual](https://github.com/quicksilver/manual/tree/main/developer/docs/plugin-development) repository. Please make any further updates there.
+The docs can be viewed online at https://developer.qsapp.com/plugin-development/intro/
+
 Plugin Development Reference
 ==========================
 
